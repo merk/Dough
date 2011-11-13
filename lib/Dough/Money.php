@@ -1,5 +1,7 @@
 <?php
 
+namespace Dough;
+
 class Money implements MoneyInterface
 {
     private $amount;

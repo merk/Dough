@@ -1,5 +1,9 @@
 <?php
 
+use Dough\Bank;
+use Dough\Money;
+use Dough\Sum;
+
 class MoneyText extends PHPUnit_Framework_TestCase
 {
     protected function getBank()
@@ -52,7 +56,7 @@ class MoneyText extends PHPUnit_Framework_TestCase
         $six = new Money(6, 'USD');
         $sum = $five->plus($six);
 
-        $this->assertInstanceOf('Sum', $sum);
+        $this->assertInstanceOf('Dough\Sum', $sum);
         $this->assertEquals($five, $sum->getAugend());
         $this->assertEquals($six, $sum->getAddend());
 

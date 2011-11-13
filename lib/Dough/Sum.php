@@ -1,5 +1,7 @@
 <?php
 
+namespace Dough;
+
 class Sum implements MoneyInterface
 {
     private $augend;

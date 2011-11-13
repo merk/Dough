@@ -1,5 +1,7 @@
 <?php
 
+namespace Dough;
+
 class Bank
 {
     private $rates = array();
