@@ -79,7 +79,7 @@ class Sum implements MoneyInterface
 
     /**
      * Multiplies all items of this sum by the multiplier.
-     * 
+     *
      * @param $multiplier
      * @return Sum
      */
