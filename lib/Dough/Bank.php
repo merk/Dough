@@ -11,34 +11,68 @@
 
 namespace Dough;
 
+use Dough\Exception\InvalidCurrencyException;
+use Dough\Exception\NoExchangeRateException;
+
 /**
  * Handles the reduction of different monetary objects into a single
  * currency.
+ *
+ * @author Tim Nagel <tim@nagel.com.au>
  */
 class Bank implements BankInterface
 {
+    /**
+     * Stores exchange rates in the format of {$fromCurrency}-{$toCurrency}
+     * as the key with the value being the exchange rate.
+     *
+     * @var array
+     */
     private $rates = array();
+
+    /**
+     * Stores an array of known currency codes.
+     *
+     * @var array
+     */
     private $currencies = array();
+
+    /**
+     * Stores the base currency to be used by this bank.
+     *
+     * @var string
+     */
+    private $baseCurrency;
+
+    /**
+     * Constructor.
+     *
+     * @param array $currencies An array of currencies this bank knows about.
+     * @param string $baseCurrency The base currency to be used by the bank.
+     *
+     * @throws \Dough\Exception\InvalidCurrencyException when the base currency
+     *         is unknown.
+     */
+    public function __construct(array $currencies, $baseCurrency)
+    {
+        $this->currencies = $currencies;
+        $this->setBaseCurrency($baseCurrency);
+    }
 
     /**
      * Checks to see if the currencies supplied are known or
      * unknown.
      *
-     * @param array $currencies
-     * @throws \InvalidArgumentException when currencies are unknown.
+     * @param array|string $currencies
+     * @throws \Dough\Exception\InvalidCurrencyException when currencies are unknown.
      */
-    protected function checkCurrencies(array $currencies)
+    protected function checkCurrencies($currencies)
     {
-        foreach ($currencies AS $currency) {
+        foreach ((array) $currencies as $currency) {
             if (!$this->hasCurrency($currency)) {
-                throw new \InvalidArgumentException(sprintf('"%s" is an unknown currency code.', $currency));
+                throw new InvalidCurrencyException(sprintf('"%s" is an unknown currency code.', $currency));
             }
         }
-    }
-
-    public function __construct(array $currencies, array $rates = null)
-    {
-        $this->currencies = $currencies;
     }
 
     /**
@@ -49,7 +83,32 @@ class Bank implements BankInterface
      */
     public function hasCurrency($currencyCode)
     {
-        return isset($this->currencies[$currencyCode]);
+        return false !== array_search((string) $currencyCode, $this->currencies);
+    }
+
+    /**
+     * Sets the base currency for calculations.
+     *
+     * @param string $baseCurrency
+     *
+     * @throws \Dough\Exception\InvalidCurrencyException when a supplied currency is
+     *         unknown.
+     */
+    public function setBaseCurrency($baseCurrency)
+    {
+        $this->checkCurrencies($baseCurrency);
+
+        $this->baseCurrency = $baseCurrency;
+    }
+
+    /**
+     * Returns the base currency code to be used by the bank.
+     *
+     * @return string
+     */
+    public function getBaseCurrency()
+    {
+        return $this->baseCurrency;
     }
 
     /**
@@ -59,7 +118,7 @@ class Bank implements BankInterface
      * @param string $toCurrency
      * @param float $rate
      *
-     * @throws \InvalidArgumentException when a supplied currency is
+     * @throws \Dough\Exception\InvalidCurrencyException when a supplied currency is
      *         unknown.
      */
     public function addRate($fromCurrency, $toCurrency, $rate)
@@ -77,7 +136,7 @@ class Bank implements BankInterface
      *
      * @return float
      *
-     * @throws \InvalidArgumentException when a supplied currency is
+     * @throws \Dough\Exception\InvalidCurrencyException when a supplied currency is
      *         unknown.
      */
     public function getRate($fromCurrency, $toCurrency)
@@ -90,7 +149,7 @@ class Bank implements BankInterface
 
         $currencyString = "{$fromCurrency}-{$toCurrency}";
         if (!isset($this->rates[$currencyString])) {
-            throw new \InvalidArgumentException(sprintf('Cannot convert %s to %s, no exchange rate found.', $fromCurrency, $toCurrency));
+            throw new NoExchangeRateException(sprintf('Cannot convert %s to %s, no exchange rate found.', $fromCurrency, $toCurrency));
         }
 
         return $this->rates[$currencyString];
@@ -105,7 +164,7 @@ class Bank implements BankInterface
      *
      * @return Money
      *
-     * @throws \InvalidArgumentException when a supplied currency is
+     * @throws \Dough\Exception\InvalidCurrencyException when a supplied currency is
      *         unknown.
      */
     public function reduce(MoneyInterface $source, $toCurrency)
@@ -114,5 +173,23 @@ class Bank implements BankInterface
 
         return $source->reduce($this, $toCurrency);
     }
-}
 
+    /**
+     * Creates a new money instance. If currency is not supplied
+     * the base currency for this bank is used.
+     *
+     * @param float|int $amount
+     * @param string|null $currency
+     * @return Money
+     */
+    public function createMoney($amount, $currency = null)
+    {
+        if (null === $currency) {
+            $currency = $this->getBaseCurrency();
+        }
+
+        $this->checkCurrencies($currency);
+
+        return new Money($amount, $currency);
+    }
+}

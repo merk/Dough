@@ -16,4 +16,13 @@
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>./lib/Dough/</directory>
+            <exclude>
+                <file>./tests/bootstrap</file>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>

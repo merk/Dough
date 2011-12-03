@@ -14,6 +14,8 @@ namespace Dough;
 /**
  * Represents a unit of currency. This object is immutable,
  * most operations will return new objects.
+ *
+ * @author Tim Nagel <tim@nagel.com.au>
  */
 class Money implements MoneyInterface
 {
@@ -69,7 +71,7 @@ class Money implements MoneyInterface
      * Multiplies this object by the multiplier and returns
      * a new object of that value.
      *
-     * @param $multiplier
+     * @param int|float $multiplier
      * @return Money
      */
     public function times($multiplier)

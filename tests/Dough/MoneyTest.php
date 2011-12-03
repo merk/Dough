@@ -17,11 +17,7 @@ class MoneyText extends PHPUnit_Framework_TestCase
 {
     protected function getBank()
     {
-        $bank = new Bank(array(
-            'USD' => 'USD',
-            'CHF' => 'CHF'
-        ));
-
+        $bank = new Bank(array('USD', 'CHF'), 'USD');
         $bank->addRate('CHF', 'USD', 0.5);
 
         return $bank;
@@ -82,7 +78,7 @@ class MoneyText extends PHPUnit_Framework_TestCase
      */
     public function testReduceSum(Sum $sum)
     {
-        $bank = new Bank(array('USD' => 'USD'));
+        $bank = new Bank(array('USD'), 'USD');
         $reduced = $bank->reduce($sum, 'USD');
 
         $this->assertEquals(new Money(11, 'USD'), $reduced);
@@ -90,7 +86,7 @@ class MoneyText extends PHPUnit_Framework_TestCase
 
     public function testReduceMoney()
     {
-        $bank = new Bank(array('USD' => 'USD'));
+        $bank = new Bank(array('USD'), 'USD');
         $five = new Money(5, 'USD');
         $result = $bank->reduce($five, 'USD');
 

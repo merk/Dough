@@ -14,12 +14,14 @@ namespace Dough;
 /**
  * Represents an object of money that can will accept
  * certain operations.
+ *
+ * @author Tim Nagel <tim@nagel.com.au>
  */
 interface MoneyInterface
 {
     /**
      * @param Bank $bank
-     * @param $toCurrency
+     * @param string $toCurrency
      * @return Money
      */
     function reduce(Bank $bank, $toCurrency);
@@ -31,7 +33,7 @@ interface MoneyInterface
     function plus(MoneyInterface $addend);
 
     /**
-     * @param $multiplier
+     * @param int|float $multiplier
      * @return MoneyInterface
      */
     function times($multiplier);

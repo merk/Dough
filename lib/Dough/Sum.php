@@ -13,6 +13,8 @@ namespace Dough;
 
 /**
  * Represents a sum of multiple monetary objects.
+ *
+ * @author Tim Nagel <tim@nagel.com.au>
  */
 class Sum implements MoneyInterface
 {
@@ -55,7 +57,7 @@ class Sum implements MoneyInterface
      * Reduces the sum to a single unit of currency.
      *
      * @param Bank $bank
-     * @param $toCurrency
+     * @param string $toCurrency
      * @return Money
      */
     public function reduce(Bank $bank, $toCurrency)
@@ -80,7 +82,7 @@ class Sum implements MoneyInterface
     /**
      * Multiplies all items of this sum by the multiplier.
      *
-     * @param $multiplier
+     * @param int|float $multiplier
      * @return Sum
      */
     public function times($multiplier)

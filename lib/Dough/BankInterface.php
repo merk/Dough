@@ -21,7 +21,7 @@ interface BankInterface
     /**
      * Checks if the bank can handle a specified currency.
      *
-     * @param $currencyCode
+     * @param string $currencyCode
      * @return bool
      */
     public function hasCurrency($currencyCode);
@@ -29,8 +29,8 @@ interface BankInterface
     /**
      * Returns the current exchange rate between 2 currencies.
      *
-     * @param $fromCurrency
-     * @param $toCurrency
+     * @param string $fromCurrency
+     * @param string $toCurrency
      *
      * @return float
      *
@@ -44,7 +44,7 @@ interface BankInterface
      * Reduces the supplied object to the specified currency.
      *
      * @param MoneyInterface $source
-     * @param $toCurrency
+     * @param string $toCurrency
      *
      * @return MoneyInterface
      *
