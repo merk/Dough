@@ -82,18 +82,6 @@ class Money extends BaseMoney
     }
 
     /**
-     * Adds the supplied monetary object to this object
-     * and returns them as a new Sum.
-     *
-     * @param MoneyInterface $addend
-     * @return Sum
-     */
-    public function plus(MoneyInterface $addend)
-    {
-        return new Sum($this, $addend);
-    }
-
-    /**
      * Reduces the value of this object to the supplied currency.
      *
      * @param \Dough\Bank\BankInterface $bank

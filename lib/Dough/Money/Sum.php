@@ -71,17 +71,6 @@ class Sum extends BaseMoney
     }
 
     /**
-     * Adds an addend to this sum.
-     *
-     * @param MoneyInterface $addend
-     * @return Sum
-     */
-    public function plus(MoneyInterface $addend)
-    {
-        return new Sum($this, $addend);
-    }
-
-    /**
      * Multiplies all items of this sum by the multiplier.
      *
      * @param int|float $multiplier

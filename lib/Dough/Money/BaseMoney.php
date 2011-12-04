@@ -20,6 +20,17 @@ namespace Dough\Money;
 abstract class BaseMoney implements MoneyInterface
 {
     /**
+     * Adds an addend to this sum.
+     *
+     * @param MoneyInterface $addend
+     * @return Sum
+     */
+    public function plus(MoneyInterface $addend)
+    {
+        return new Sum($this, $addend);
+    }
+
+    /**
      * Subtracts the subtrahend from the money object.
      *
      * The subtrahend should be passed in as a positive value.
