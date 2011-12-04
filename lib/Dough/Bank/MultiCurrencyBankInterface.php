@@ -11,23 +11,36 @@
 
 namespace Dough\Bank;
 
-use Dough\Money\MultiCurrencyMoneyInterface;
-use DateTime;
+use Dough\Money\MoneyInterface;
 
 /**
- * Historical Bank interface. Supplies additional historical
- * based functions for currency exchange.
+ * Bank interface
  *
  * @author Tim Nagel <tim@nagel.com.au>
  */
-interface HistoricalBankInterface extends MultiCurrencyBankInterface
+interface MultiCurrencyBankInterface extends BankInterface
 {
+    /**
+     * Sets the base currency to be used when a currency is
+     * not specified for an operation.
+     *
+     * @param string $baseCurrency
+     */
+    public function setBaseCurrency($baseCurrency);
+
+    /**
+     * Checks if the bank can handle a specified currency.
+     *
+     * @param string $currencyCode
+     * @return bool
+     */
+    public function hasCurrency($currencyCode);
+
     /**
      * Returns the current exchange rate between 2 currencies.
      *
      * @param string $fromCurrency
      * @param string $toCurrency
-     * @param \DateTime $at
      *
      * @return float
      *
@@ -35,14 +48,16 @@ interface HistoricalBankInterface extends MultiCurrencyBankInterface
      *         or when the supplied currencies do not have an exchange
      *         rate set.
      */
-    public function getRateAt($fromCurrency, $toCurrency, DateTime $at);
+    public function getRate($fromCurrency, $toCurrency);
 
     /**
      * Reduces the supplied object to the specified currency.
      *
-     * @param \Dough\Money\MultiCurrencyMoneyInterface $source
-     * @param string $toCurrency
-     * @param \DateTime $at
+     * If no currency is supplied, it will convert to the default
+     * currency.
+     *
+     * @param \Dough\Money\MoneyInterface $source
+     * @param string|null $toCurrency
      *
      * @return MoneyInterface
      *
@@ -50,5 +65,5 @@ interface HistoricalBankInterface extends MultiCurrencyBankInterface
      *         or when the supplied currencies do not have an exchange
      *         rate set.
      */
-    public function reduceAt(MultiCurrencyMoneyInterface $source, $toCurrency, DateTime $at);
+    // public function reduce(MoneyInterface $source);
 }

@@ -59,15 +59,15 @@ class Sum extends BaseMoney
      * Reduces the sum to a single unit of currency.
      *
      * @param \Dough\Bank\BankInterface $bank
-     * @param string $toCurrency
+     *
      * @return Money
      */
-    public function reduce(BankInterface $bank, $toCurrency)
+    public function reduce(BankInterface $bank)
     {
-        $amount = $this->augend->reduce($bank, $toCurrency)->getAmount() +
-                  $this->addend->reduce($bank, $toCurrency)->getAmount();
+        $amount = $this->augend->reduce($bank)->getAmount() +
+                  $this->addend->reduce($bank)->getAmount();
 
-        return new Money($amount, $toCurrency);
+        return new Money($amount);
     }
 
     /**
@@ -78,6 +78,6 @@ class Sum extends BaseMoney
      */
     public function times($multiplier)
     {
-        return new Sum($this->augend->times($multiplier), $this->addend->times($multiplier));
+        return new self($this->augend->times($multiplier), $this->addend->times($multiplier));
     }
 }

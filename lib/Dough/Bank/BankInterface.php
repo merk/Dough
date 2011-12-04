@@ -21,38 +21,12 @@ use Dough\Money\MoneyInterface;
 interface BankInterface
 {
     /**
-     * Checks if the bank can handle a specified currency.
-     *
-     * @param string $currencyCode
-     * @return bool
-     */
-    public function hasCurrency($currencyCode);
-
-    /**
-     * Returns the current exchange rate between 2 currencies.
-     *
-     * @param string $fromCurrency
-     * @param string $toCurrency
-     *
-     * @return float
-     *
-     * @throws InvalidArgumentException when a currency does not exist
-     *         or when the supplied currencies do not have an exchange
-     *         rate set.
-     */
-    public function getRate($fromCurrency, $toCurrency);
-
-    /**
-     * Reduces the supplied object to the specified currency.
+     * Reduces the supplied object to a single Money
+     * object.
      *
      * @param \Dough\Money\MoneyInterface $source
-     * @param string $toCurrency
      *
      * @return MoneyInterface
-     *
-     * @throws InvalidArgumentException when a currency does not exist
-     *         or when the supplied currencies do not have an exchange
-     *         rate set.
      */
-    public function reduce(MoneyInterface $source, $toCurrency);
+    public function reduce(MoneyInterface $source);
 }

@@ -25,15 +25,16 @@ interface MoneyInterface
      * Reduces the object to a specified currency. Used
      *
      * @param \Dough\Bank\BankInterface $bank
-     * @param string $toCurrency
+     *
      * @return Money
      */
-    public function reduce(BankInterface $bank, $toCurrency);
+    public function reduce(BankInterface $bank);
 
     /**
      * Adds the addend to the money object.
      *
      * @param MoneyInterface $addend
+     *
      * @return Sum
      */
     public function plus(MoneyInterface $addend);
