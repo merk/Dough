@@ -10,6 +10,7 @@
  */
 
 use Dough\Bank\MultiCurrencyBank;
+use Dough\Exchanger\ArrayExchanger;
 use Dough\Money\Money;
 use Dough\Money\MultiCurrencyMoney;
 use Dough\Money\MultiCurrencySum;
@@ -23,8 +24,9 @@ class MultiCurrencyMoneyText extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->bank = new MultiCurrencyBank('Dough\\Money\\MultiCurrencyMoney', array('USD', 'CHF'), 'USD');
-        $this->bank->addRate('CHF', 'USD', 0.5);
+        $exchanger = new ArrayExchanger();
+        $exchanger->addRate('CHF', 'USD', 0.5);
+        $this->bank = new MultiCurrencyBank('Dough\\Money\\MultiCurrencyMoney', array('USD', 'CHF'), 'USD', $exchanger);
     }
 
     public function testEquality()

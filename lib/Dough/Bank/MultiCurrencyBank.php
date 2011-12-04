@@ -13,6 +13,7 @@ namespace Dough\Bank;
 
 use Dough\Exception\InvalidCurrencyException;
 use Dough\Exception\NoExchangeRateException;
+use Dough\Exchanger\ExchangerInterface;
 use Dough\Money\Money;
 use Dough\Money\MoneyInterface;
 
@@ -32,14 +33,6 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
     protected $moneyClass;
 
     /**
-     * Stores exchange rates in the format of {$fromCurrency}-{$toCurrency}
-     * as the key with the value being the exchange rate.
-     *
-     * @var array
-     */
-    private $rates = array();
-
-    /**
      * Stores an array of known currency codes.
      *
      * @var array
@@ -54,20 +47,29 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
     private $baseCurrency;
 
     /**
+     * The currency exchanger.
+     *
+     * @var \Dough\Exchanger\ExchangerInterface
+     */
+    private $exchanger;
+
+    /**
      * Constructor.
      *
      * @param string $moneyClass
      * @param array $currencies An array of currencies this bank knows about.
      * @param string $baseCurrency The base currency to be used by the bank.
+     * @param \Dough\Exchanger\ExchangerInterface $exchanger
      *
      * @throws \Dough\Exception\InvalidCurrencyException when the base currency
      *         is unknown.
      */
-    public function __construct($moneyClass, array $currencies, $baseCurrency)
+    public function __construct($moneyClass, array $currencies, $baseCurrency, ExchangerInterface $exchanger)
     {
         $this->moneyClass = $moneyClass;
         $this->currencies = $currencies;
         $this->setBaseCurrency($baseCurrency);
+        $this->exchanger = $exchanger;
     }
 
     /**
@@ -124,47 +126,24 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
     }
 
     /**
-     * Add a new currency conversion rate.
-     *
-     * @param string $fromCurrency
-     * @param string $toCurrency
-     * @param float $rate
-     *
-     * @throws \Dough\Exception\InvalidCurrencyException when a supplied currency is
-     *         unknown.
-     */
-    public function addRate($fromCurrency, $toCurrency, $rate)
-    {
-        $this->checkCurrencies(array($fromCurrency, $toCurrency));
-
-        $this->rates["{$fromCurrency}-{$toCurrency}"] = $rate;
-    }
-
-    /**
-     * Returns the conversion rate between two currencies.
+     * Returns the current exchange rate between 2 currencies.
      *
      * @param string $fromCurrency
      * @param string $toCurrency
      *
      * @return float
      *
-     * @throws \Dough\Exception\InvalidCurrencyException when a supplied currency is
-     *         unknown.
+     * @throws \Dough\Exception\InvalidCurrencyException when a supplied
+     *         currency is unknown.
+     * @throws \InvalidArgumentException when a currency does not exist
+     *         or when the supplied currencies do not have an exchange
+     *         rate set.
      */
     public function getRate($fromCurrency, $toCurrency)
     {
         $this->checkCurrencies(array($fromCurrency, $toCurrency));
 
-        if ($fromCurrency === $toCurrency) {
-            return 1;
-        }
-
-        $currencyString = "{$fromCurrency}-{$toCurrency}";
-        if (!isset($this->rates[$currencyString])) {
-            throw new NoExchangeRateException(sprintf('Cannot convert %s to %s, no exchange rate found.', $fromCurrency, $toCurrency));
-        }
-
-        return $this->rates[$currencyString];
+        return $this->exchanger->getRate($fromCurrency, $toCurrency);
     }
 
     /**

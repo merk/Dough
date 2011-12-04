@@ -10,6 +10,7 @@
  */
 
 use Dough\Bank\MultiCurrencyBank;
+use Dough\Exchanger\ArrayExchanger;
 use Dough\Money\Money;
 
 class MultiCurrencyBankText extends PHPUnit_Framework_TestCase
@@ -19,17 +20,15 @@ class MultiCurrencyBankText extends PHPUnit_Framework_TestCase
      */
     protected $bank;
 
+    /**
+     * @var \Dough\Exchanger\ArrayExchanger
+     */
+    protected $exchanger;
+
     protected function setUp()
     {
-        $this->bank = new MultiCurrencyBank('Dough\\Money\\MultiCurrencyMoney', array('USD', 'CHF'), 'USD');
-    }
-
-    /**
-     * @expectedException \Dough\Exception\InvalidCurrencyException
-     */
-    public function testAddInvalidRate()
-    {
-        $this->bank->addRate('XTS', 'USD', 5);
+        $this->exchanger = new ArrayExchanger();
+        $this->bank = new MultiCurrencyBank('Dough\\Money\\MultiCurrencyMoney', array('USD', 'CHF'), 'USD', $this->exchanger);
     }
 
     /**
@@ -37,7 +36,7 @@ class MultiCurrencyBankText extends PHPUnit_Framework_TestCase
      */
     public function testInvalidBaseCurrency()
     {
-        new MultiCurrencyBank('Dough\\Money\\MultiCurrencyMoney', array(), 'USD');
+        new MultiCurrencyBank('Dough\\Money\\MultiCurrencyMoney', array(), 'USD', $this->exchanger);
     }
 
     /**
@@ -48,20 +47,12 @@ class MultiCurrencyBankText extends PHPUnit_Framework_TestCase
         $this->bank->getRate('USD', 'CHF');
     }
 
-    public function testAddRate()
-    {
-        $this->bank->addRate('USD', 'CHF', 0.5);
-    }
-
-    /**
-     * @depends testAddRate
-     */
     public function testGetRates()
     {
         $this->assertEquals(1, $this->bank->getRate('USD', 'USD'));
 
-        $this->bank->addRate('USD', 'CHF', 0.5);
-        $this->assertEquals(0.5, $this->bank->getRate('USD', 'CHF'));
+        $this->exchanger->addRate('CHF', 'USD', 0.5);
+        $this->assertEquals(0.5, $this->bank->getRate('CHF', 'USD'));
     }
 
     public function testCreateBaseCurrencyMoney()
