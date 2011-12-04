@@ -9,7 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Dough;
+namespace Dough\Money;
+
+use Dough\Bank\BankInterface;
 
 /**
  * Represents a unit of currency. This object is immutable,
@@ -80,6 +82,17 @@ class Money implements MoneyInterface
     }
 
     /**
+     * Divides the money object by the divisor.
+     *
+     * @param int|float $divisor
+     * @return MoneyInterface
+     */
+    public function divide($divisor)
+    {
+        return $this->times(1 / $divisor);
+    }
+
+    /**
      * Adds the supplied monetary object to this object
      * and returns them as a new Sum.
      *
@@ -92,13 +105,26 @@ class Money implements MoneyInterface
     }
 
     /**
+     * Subtracts the subtrahend from the money object.
+     *
+     * The subtrahend should be passed in as a positive value.
+     *
+     * @param MoneyInterface $subtrahend
+     * @return Sum
+     */
+    public function subtract(MoneyInterface $subtrahend)
+    {
+        return $this->plus($subtrahend->times(-1));
+    }
+
+    /**
      * Reduces the value of this object to the supplied currency.
      *
-     * @param Bank $bank
+     * @param \Dough\Bank\BankInterface $bank
      * @param string $toCurrency
      * @return Money
      */
-    public function reduce(Bank $bank, $toCurrency)
+    public function reduce(BankInterface $bank, $toCurrency)
     {
         $rate = $bank->getRate($this->currency, $toCurrency);
         return new Money((float) $this->amount * $rate, $toCurrency);

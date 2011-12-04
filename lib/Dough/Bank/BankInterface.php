@@ -9,24 +9,30 @@
  * file that was distributed with this source code.
  */
 
-namespace Dough;
+namespace Dough\Bank;
 
-use DateTime;
+use Dough\Money\MoneyInterface;
 
 /**
- * Historical Bank interface. Supplies additional historical
- * based functions for currency exchange.
+ * Bank interface
  *
  * @author Tim Nagel <tim@nagel.com.au>
  */
-interface HistoricalBankInterface extends BankInterface
+interface BankInterface
 {
+    /**
+     * Checks if the bank can handle a specified currency.
+     *
+     * @param string $currencyCode
+     * @return bool
+     */
+    public function hasCurrency($currencyCode);
+
     /**
      * Returns the current exchange rate between 2 currencies.
      *
      * @param string $fromCurrency
      * @param string $toCurrency
-     * @param \DateTime $at
      *
      * @return float
      *
@@ -34,14 +40,13 @@ interface HistoricalBankInterface extends BankInterface
      *         or when the supplied currencies do not have an exchange
      *         rate set.
      */
-    public function getRateAt($fromCurrency, $toCurrency, DateTime $at);
+    public function getRate($fromCurrency, $toCurrency);
 
     /**
      * Reduces the supplied object to the specified currency.
      *
-     * @param MoneyInterface $source
+     * @param \Dough\Money\MoneyInterface $source
      * @param string $toCurrency
-     * @param \DateTime $at
      *
      * @return MoneyInterface
      *
@@ -49,5 +54,5 @@ interface HistoricalBankInterface extends BankInterface
      *         or when the supplied currencies do not have an exchange
      *         rate set.
      */
-    public function reduceAt(MoneyInterface $source, $toCurrency, DateTime $at);
+    public function reduce(MoneyInterface $source, $toCurrency);
 }

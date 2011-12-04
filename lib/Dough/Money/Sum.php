@@ -9,7 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Dough;
+namespace Dough\Money;
+
+use Dough\Bank\BankInterface;
 
 /**
  * Represents a sum of multiple monetary objects.
@@ -56,11 +58,11 @@ class Sum implements MoneyInterface
     /**
      * Reduces the sum to a single unit of currency.
      *
-     * @param Bank $bank
+     * @param \Dough\Bank\BankInterface $bank
      * @param string $toCurrency
      * @return Money
      */
-    public function reduce(Bank $bank, $toCurrency)
+    public function reduce(BankInterface $bank, $toCurrency)
     {
         $amount = $this->augend->reduce($bank, $toCurrency)->getAmount() +
                   $this->addend->reduce($bank, $toCurrency)->getAmount();
@@ -80,6 +82,17 @@ class Sum implements MoneyInterface
     }
 
     /**
+     * Subtracts the subtrahend from the money object.
+     *
+     * @param MoneyInterface $subtrahend
+     * @return Sum
+     */
+    public function subtract(MoneyInterface $subtrahend)
+    {
+        return $this->plus($subtrahend->times(-1));
+    }
+
+    /**
      * Multiplies all items of this sum by the multiplier.
      *
      * @param int|float $multiplier
@@ -88,5 +101,16 @@ class Sum implements MoneyInterface
     public function times($multiplier)
     {
         return new Sum($this->augend->times($multiplier), $this->addend->times($multiplier));
+    }
+
+    /**
+     * Divides the money object by the divisor.
+     *
+     * @param int|float $divisor
+     * @return MoneyInterface
+     */
+    public function divide($divisor)
+    {
+        return $this->times(1 / $divisor);
     }
 }

@@ -9,10 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Dough;
+namespace Dough\Bank;
 
 use Dough\Exception\InvalidCurrencyException;
 use Dough\Exception\NoExchangeRateException;
+use Dough\Money\Money;
+use Dough\Money\MoneyInterface;
 
 /**
  * Handles the reduction of different monetary objects into a single
@@ -159,7 +161,7 @@ class Bank implements BankInterface
      * Reduces the supplied monetary object into a single
      * Money object of the supplied currency.
      *
-     * @param MoneyInterface $source
+     * @param \Dough\Money\MoneyInterface $source
      * @param string $toCurrency
      *
      * @return Money
@@ -180,7 +182,7 @@ class Bank implements BankInterface
      *
      * @param float|int $amount
      * @param string|null $currency
-     * @return Money
+     * @return \Dough\Money\Money
      */
     public function createMoney($amount, $currency = null)
     {

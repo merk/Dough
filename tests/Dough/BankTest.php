@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-use Dough\Bank;
-use Dough\Money;
+use Dough\Bank\Bank;
+use Dough\Money\Money;
 
 class BankText extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Dough\Bank
+     * @var \Dough\Bank\Bank
      */
     protected $bank;
 
@@ -52,7 +52,7 @@ class BankText extends PHPUnit_Framework_TestCase
     {
         $money = $this->bank->createMoney(10);
 
-        $this->assertInstanceOf('Dough\Money', $money);
+        $this->assertInstanceOf('Dough\Money\Money', $money);
         $this->assertEquals('USD', $money->getCurrency());
     }
 
