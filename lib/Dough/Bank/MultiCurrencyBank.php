@@ -25,6 +25,13 @@ use Dough\Money\MoneyInterface;
 class MultiCurrencyBank implements MultiCurrencyBankInterface
 {
     /**
+     * FQCN of the class to use when creating new money instances.
+     *
+     * @var string
+     */
+    protected $moneyClass;
+
+    /**
      * Stores exchange rates in the format of {$fromCurrency}-{$toCurrency}
      * as the key with the value being the exchange rate.
      *
@@ -49,14 +56,16 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
     /**
      * Constructor.
      *
+     * @param string $moneyClass
      * @param array $currencies An array of currencies this bank knows about.
      * @param string $baseCurrency The base currency to be used by the bank.
      *
      * @throws \Dough\Exception\InvalidCurrencyException when the base currency
      *         is unknown.
      */
-    public function __construct(array $currencies, $baseCurrency)
+    public function __construct($moneyClass, array $currencies, $baseCurrency)
     {
+        $this->moneyClass = $moneyClass;
         $this->currencies = $currencies;
         $this->setBaseCurrency($baseCurrency);
     }
@@ -89,7 +98,8 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
     }
 
     /**
-     * Sets the base currency for calculations.
+     * Sets the base currency to be used when a currency is
+     * not specified for an operation.
      *
      * @param string $baseCurrency
      *
@@ -169,9 +179,13 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
      * @throws \Dough\Exception\InvalidCurrencyException when a supplied currency is
      *         unknown.
      */
-    public function reduce(MoneyInterface $source, $toCurrency)
+    public function reduce(MoneyInterface $source, $toCurrency = null)
     {
-        $this->checkCurrencies(array($toCurrency));
+        if (null === $toCurrency) {
+            $toCurrency = $this->getBaseCurrency();
+        }
+
+        $this->checkCurrencies($toCurrency);
 
         return $source->reduce($this, $toCurrency);
     }
@@ -182,7 +196,11 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
      *
      * @param float|int $amount
      * @param string|null $currency
-     * @return \Dough\Money\Money
+     *
+     * @return \Dough\Money\MultiCurrencyMoney
+     *
+     * @throws \Dough\Exception\InvalidCurrencyException when a supplied currency is
+     *         unknown.
      */
     public function createMoney($amount, $currency = null)
     {
@@ -192,6 +210,7 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
 
         $this->checkCurrencies($currency);
 
-        return new Money($amount, $currency);
+        $class = $this->moneyClass;
+        return new $class($amount, $currency);
     }
 }

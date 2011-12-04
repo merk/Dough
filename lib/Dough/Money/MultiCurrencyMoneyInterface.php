@@ -14,8 +14,7 @@ namespace Dough\Money;
 use Dough\Bank\BankInterface;
 
 /**
- * Represents an object of money that can will accept
- * certain operations.
+ * A bank that can handle currency conversion operations.
  *
  * @author Tim Nagel <tim@nagel.com.au>
  */
@@ -28,5 +27,5 @@ interface MultiCurrencyMoneyInterface extends MoneyInterface
      * @param string $toCurrency
      * @return Money
      */
-    public function reduce(BankInterface $bank, $toCurrency = null);
+    // public function reduce(BankInterface $bank, $toCurrency = null);
 }

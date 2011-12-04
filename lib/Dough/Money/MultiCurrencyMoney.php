@@ -12,6 +12,7 @@
 namespace Dough\Money;
 
 use Dough\Bank\BankInterface;
+use Dough\Bank\MultiCurrencyBankInterface;
 
 /**
  * Represents a unit of currency. This object is immutable,
@@ -19,9 +20,8 @@ use Dough\Bank\BankInterface;
  *
  * @author Tim Nagel <tim@nagel.com.au>
  */
-class MultiCurrencyMoney extends BaseMoney implements MultiCurrencyMoneyInterface
+class MultiCurrencyMoney extends Money implements MultiCurrencyMoneyInterface
 {
-    private $amount;
     private $currency;
 
     /**
@@ -30,19 +30,9 @@ class MultiCurrencyMoney extends BaseMoney implements MultiCurrencyMoneyInterfac
      */
     public function __construct($amount, $currency)
     {
-        $this->amount = $amount;
-        $this->currency = $currency;
-    }
+        parent::__construct($amount);
 
-    /**
-     * Returns the amount of currency represented by this
-     * object.
-     *
-     * @return float
-     */
-    public function getAmount()
-    {
-        return $this->amount;
+        $this->currency = $currency;
     }
 
     /**
@@ -66,7 +56,22 @@ class MultiCurrencyMoney extends BaseMoney implements MultiCurrencyMoneyInterfac
      */
     public function equals(Money $money)
     {
-        return $money->currency == $this->currency && $money->amount == $this->amount;
+        if (!$money instanceof MultiCurrencyMoney) {
+            return false;
+        }
+
+        return $money->currency == $this->currency && $money->getAmount() == $this->getAmount();
+    }
+
+    /**
+     * Adds an addend to this object.
+     *
+     * @param MoneyInterface $addend
+     * @return Sum
+     */
+    public function plus(MoneyInterface $addend)
+    {
+        return new MultiCurrencySum($this, $addend);
     }
 
     /**
@@ -78,7 +83,7 @@ class MultiCurrencyMoney extends BaseMoney implements MultiCurrencyMoneyInterfac
      */
     public function times($multiplier)
     {
-        return new Money($this->amount * $multiplier, $this->currency);
+        return new self($this->getAmount() * $multiplier, $this->currency);
     }
 
     /**
@@ -86,11 +91,20 @@ class MultiCurrencyMoney extends BaseMoney implements MultiCurrencyMoneyInterfac
      *
      * @param \Dough\Bank\BankInterface $bank
      * @param string $toCurrency
+     *
      * @return Money
+     *
+     * @throws \InvalidArgumentException when the supplied $bank does not
+     *         support currency conversion.
      */
     public function reduce(BankInterface $bank, $toCurrency = null)
     {
+        if (!$bank instanceof MultiCurrencyBankInterface) {
+            throw new \InvalidArgumentException('The supplied bank must implement MultiCurrencyBankInterface');
+        }
+
         $rate = $bank->getRate($this->currency, $toCurrency);
-        return new Money((float) $this->amount * $rate, $toCurrency);
+
+        return new MultiCurrencyMoney((float) $this->getAmount() * $rate, $toCurrency);
     }
 }

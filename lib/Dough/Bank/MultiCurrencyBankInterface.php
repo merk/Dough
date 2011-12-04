@@ -21,6 +21,14 @@ use Dough\Money\MoneyInterface;
 interface MultiCurrencyBankInterface extends BankInterface
 {
     /**
+     * Sets the base currency to be used when a currency is
+     * not specified for an operation.
+     *
+     * @param string $baseCurrency
+     */
+    public function setBaseCurrency($baseCurrency);
+
+    /**
      * Checks if the bank can handle a specified currency.
      *
      * @param string $currencyCode
@@ -57,5 +65,5 @@ interface MultiCurrencyBankInterface extends BankInterface
      *         or when the supplied currencies do not have an exchange
      *         rate set.
      */
-    public function reduce(MoneyInterface $source, $toCurrency = null);
+    // public function reduce(MoneyInterface $source);
 }

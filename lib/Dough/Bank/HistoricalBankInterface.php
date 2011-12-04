@@ -11,6 +11,7 @@
 
 namespace Dough\Bank;
 
+use Dough\Money\MultiCurrencyMoneyInterface;
 use DateTime;
 
 /**
@@ -19,7 +20,7 @@ use DateTime;
  *
  * @author Tim Nagel <tim@nagel.com.au>
  */
-interface HistoricalBankInterface extends BankInterface
+interface HistoricalBankInterface extends MultiCurrencyBankInterface
 {
     /**
      * Returns the current exchange rate between 2 currencies.
@@ -39,7 +40,7 @@ interface HistoricalBankInterface extends BankInterface
     /**
      * Reduces the supplied object to the specified currency.
      *
-     * @param MoneyInterface $source
+     * @param \Dough\Money\MultiCurrencyMoneyInterface $source
      * @param string $toCurrency
      * @param \DateTime $at
      *
@@ -49,5 +50,5 @@ interface HistoricalBankInterface extends BankInterface
      *         or when the supplied currencies do not have an exchange
      *         rate set.
      */
-    public function reduceAt(MoneyInterface $source, $toCurrency, DateTime $at);
+    public function reduceAt(MultiCurrencyMoneyInterface $source, $toCurrency, DateTime $at);
 }

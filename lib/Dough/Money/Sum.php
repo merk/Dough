@@ -78,6 +78,6 @@ class Sum extends BaseMoney
      */
     public function times($multiplier)
     {
-        return new Sum($this->augend->times($multiplier), $this->addend->times($multiplier));
+        return new self($this->augend->times($multiplier), $this->addend->times($multiplier));
     }
 }
