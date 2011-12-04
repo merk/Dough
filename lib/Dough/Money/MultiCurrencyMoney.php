@@ -19,16 +19,19 @@ use Dough\Bank\BankInterface;
  *
  * @author Tim Nagel <tim@nagel.com.au>
  */
-class Money extends BaseMoney
+class MultiCurrencyMoney extends BaseMoney implements MultiCurrencyMoneyInterface
 {
     private $amount;
+    private $currency;
 
     /**
      * @param float $amount
+     * @param string $currency
      */
-    public function __construct($amount)
+    public function __construct($amount, $currency)
     {
         $this->amount = $amount;
+        $this->currency = $currency;
     }
 
     /**
@@ -43,15 +46,27 @@ class Money extends BaseMoney
     }
 
     /**
+     * Returns the currency represented by this object.
+     *
+     * @return string
+     */
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    /**
      * Tests if two objects are of equal value.
      *
-     * @param Money $money
+     * TODO: optionally supply a bank object to do a
+     * currency conversion for an equals check?
      *
+     * @param Money $money
      * @return bool
      */
     public function equals(Money $money)
     {
-        return $money->amount == $this->amount;
+        return $money->currency == $this->currency && $money->amount == $this->amount;
     }
 
     /**
@@ -59,23 +74,23 @@ class Money extends BaseMoney
      * a new object of that value.
      *
      * @param int|float $multiplier
-     *
      * @return Money
      */
     public function times($multiplier)
     {
-        return new Money($this->amount * $multiplier);
+        return new Money($this->amount * $multiplier, $this->currency);
     }
 
     /**
-     * Reduces the value of this object to a single object.
+     * Reduces the value of this object to the supplied currency.
      *
      * @param \Dough\Bank\BankInterface $bank
-     *
+     * @param string $toCurrency
      * @return Money
      */
-    public function reduce(BankInterface $bank)
+    public function reduce(BankInterface $bank, $toCurrency = null)
     {
-        return clone $this;
+        $rate = $bank->getRate($this->currency, $toCurrency);
+        return new Money((float) $this->amount * $rate, $toCurrency);
     }
 }

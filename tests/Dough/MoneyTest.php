@@ -17,61 +17,42 @@ class MoneyText extends PHPUnit_Framework_TestCase
 {
     protected function getBank()
     {
-        $bank = new Bank(array('USD', 'CHF'), 'USD');
-        $bank->addRate('CHF', 'USD', 0.5);
+        $bank = new Bank('Dough\\Money\\Money');
 
         return $bank;
     }
 
     public function testEquality()
     {
-        $fiveDollars = new Money(5, 'USD');
-        $sixDollars = new Money(6, 'USD');
-        $fiveFrancs = new Money(5, 'CHF');
+        $five = new Money(5);
+        $six = new Money(6);
 
-        $this->assertTrue($fiveDollars->equals($fiveDollars));
-        $this->assertFalse($fiveDollars->equals($sixDollars));
-        $this->assertFalse($fiveDollars->equals($fiveFrancs));
+        $this->assertTrue($five->equals($five));
+        $this->assertFalse($six->equals($five));
     }
 
     public function testDollarMultiplication()
     {
-        $five = new Money(5, 'USD');
+        $five = new Money(5);
 
-        $this->assertEquals(new Money(10, 'USD'), $five->times(2));
-        $this->assertEquals(new Money(15, 'USD'), $five->times(3));
-    }
-
-    public function testFrancMultiplication()
-    {
-        $five = new Money(5, 'CHF');
-
-        $this->assertEquals(new Money(10, 'CHF'), $five->times(2));
-        $this->assertEquals(new Money(15, 'CHF'), $five->times(3));
+        $this->assertEquals(new Money(10), $five->times(2));
+        $this->assertEquals(new Money(15), $five->times(3));
+        $this->assertEquals(new Money(1), $five->times(0.2));
     }
 
     public function testDivide()
     {
-        $ten = new Money(10, 'USD');
+        $ten = new Money(10);
 
-        $this->assertEquals(new Money(5, 'USD'), $ten->divide(2));
-        $this->assertEquals(new Money(20, 'USD'), $ten->divide(.5));
+        $this->assertEquals(new Money(5), $ten->divide(2));
+        $this->assertEquals(new Money(20), $ten->divide(.5));
     }
 
     public function testOddDivision()
     {
-        $ten = new Money(10, 'USD');
+        $ten = new Money(10);
 
-        $this->assertEquals(new Money(3.3333333333333, 'USD'), $ten->divide(3));
-    }
-
-    public function testCurrency()
-    {
-        $dollar = new Money(1, 'USD');
-        $franc = new Money(1, 'CHF');
-
-        $this->assertEquals('USD', $dollar->getCurrency());
-        $this->assertEquals('CHF', $franc->getCurrency());
+        $this->assertEquals(new Money(3.3333333333333), $ten->divide(3));
     }
 
     /**
@@ -79,8 +60,8 @@ class MoneyText extends PHPUnit_Framework_TestCase
      */
     public function testAddition()
     {
-        $five = new Money(5, 'USD');
-        $six = new Money(6, 'USD');
+        $five = new Money(5);
+        $six = new Money(6);
         $sum = $five->plus($six);
 
         $this->assertInstanceOf('Dough\Money\Sum', $sum);
@@ -96,16 +77,16 @@ class MoneyText extends PHPUnit_Framework_TestCase
      */
     public function testReduceSum(Sum $sum)
     {
-        $bank = new Bank(array('USD'), 'USD');
-        $reduced = $bank->reduce($sum, 'USD');
+        $bank = $this->getBank();
+        $reduced = $bank->reduce($sum);
 
-        $this->assertEquals(new Money(11, 'USD'), $reduced);
+        $this->assertEquals(new Money(11), $reduced);
     }
 
     public function testSubtraction()
     {
-        $five = new Money(5, 'USD');
-        $six = new Money(6, 'USD');
+        $five = new Money(5);
+        $six = new Money(6);
         $subtraction = $six->subtract($five);
 
         $this->assertInstanceOf('Dough\Money\Sum', $subtraction);
@@ -121,61 +102,40 @@ class MoneyText extends PHPUnit_Framework_TestCase
      */
     public function testReduceSubtraction(Sum $subtraction)
     {
-        $bank = new Bank(array('USD'), 'USD');
-        $reduced = $bank->reduce($subtraction, 'USD');
+        $bank = $this->getBank();
+        $reduced = $bank->reduce($subtraction);
 
-        $this->assertEquals(new Money(1, 'USD'), $reduced);
+        $this->assertEquals(new Money(1), $reduced);
     }
 
     public function testReduceMoney()
     {
-        $bank = new Bank(array('USD'), 'USD');
-        $five = new Money(5, 'USD');
-        $result = $bank->reduce($five, 'USD');
+        $bank = $this->getBank();
+        $five = new Money(5);
+        $result = $bank->reduce($five);
 
         $this->assertTrue($five->equals($result));
-    }
-
-    public function testReduceDifferentCurrencies()
-    {
-        $bank = $this->getBank();
-        $result = $bank->reduce(new Money(2, 'CHF'), 'USD');
-
-        $this->assertTrue($result->equals(new Money(1, 'USD')));
-    }
-
-    public function testMixedAddition()
-    {
-        $bank = $this->getBank();
-
-        $fiveDollars = new Money(5, 'USD');
-        $tenFrancs = new Money(10, 'CHF');
-
-        $result = $bank->reduce($fiveDollars->plus($tenFrancs), 'USD');
-        $this->assertTrue($result->equals(new Money(10, 'USD')));
     }
 
     public function testSumPlusMoney()
     {
         $bank = $this->getBank();
 
-        $fiveDollars = new Money(5, 'USD');
-        $tenFrancs = new Money(10, 'CHF');
+        $five = new Money(5);
 
-        $sum = $fiveDollars->plus($tenFrancs)->plus($fiveDollars);
-        $result = $bank->reduce($sum, 'USD');
+        $sum = $five->plus($five)->plus($five);
+        $result = $bank->reduce($sum);
 
-        $this->assertTrue($result->equals(new Money(15, 'USD')));
+        $this->assertTrue($result->equals(new Money(15)));
     }
 
     public function testSumMultiply()
     {
         $bank = $this->getBank();
 
-        $fiveDollars = new Money(5, 'USD');
-        $tenFrancs = new Money(10, 'CHF');
+        $five = new Money(5, 'USD');
 
-        $sum = $fiveDollars->plus($tenFrancs)->times(2);
+        $sum = $five->plus($five)->times(2);
         $result = $bank->reduce($sum, 'USD');
 
         $this->assertTrue($result->equals(new Money(20, 'USD')));

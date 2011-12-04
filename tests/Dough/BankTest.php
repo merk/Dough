@@ -21,53 +21,14 @@ class BankText extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->bank = new Bank(array('USD', 'CHF'), 'USD');
-    }
-
-    /**
-     * @expectedException \Dough\Exception\InvalidCurrencyException
-     */
-    public function testAddInvalidRate()
-    {
-        $this->bank->addRate('XTS', 'USD', 5);
-    }
-
-    /**
-     * @expectedException \Dough\Exception\InvalidCurrencyException
-     */
-    public function testInvalidBaseCurrency()
-    {
-        new Bank(array(), 'USD');
-    }
-
-    /**
-     * @expectedException \Dough\Exception\NoExchangeRateException
-     */
-    public function testNoRate()
-    {
-        $this->bank->getRate('USD', 'CHF');
-    }
-
-    public function testCreateBaseCurrencyMoney()
-    {
-        $money = $this->bank->createMoney(10);
-
-        $this->assertInstanceOf('Dough\Money\Money', $money);
-        $this->assertEquals('USD', $money->getCurrency());
+        $this->bank = new Bank('Dough\\Money\\Money');
     }
 
     public function testCreateMoney()
     {
-        $money = $this->bank->createMoney(10, 'CHF');
+        $money = $this->bank->createMoney(10);
 
-        $this->assertEquals('CHF', $money->getCurrency());
-    }
-
-    /**
-     * @expectedException \Dough\Exception\InvalidCurrencyException
-     */
-    public function testCreateMoneyUnknownCurrency()
-    {
-        $this->bank->createMoney(10, 'XSF');
+        $this->assertInstanceOf('Dough\\Money\\MoneyInterface', $money);
+        $this->assertEquals(10, $money->getAmount());
     }
 }
