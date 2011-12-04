@@ -64,12 +64,13 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
      * @throws \Dough\Exception\InvalidCurrencyException when the base currency
      *         is unknown.
      */
-    public function __construct($moneyClass, array $currencies, $baseCurrency, ExchangerInterface $exchanger)
+    public function __construct(array $currencies, $baseCurrency, ExchangerInterface $exchanger, $moneyClass = 'Dough\\Money\\MultiCurrencyMoney')
     {
-        $this->moneyClass = $moneyClass;
         $this->currencies = $currencies;
-        $this->setBaseCurrency($baseCurrency);
         $this->exchanger = $exchanger;
+        $this->moneyClass = $moneyClass;
+
+        $this->setBaseCurrency($baseCurrency);
     }
 
     /**

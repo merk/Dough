@@ -28,7 +28,7 @@ class MultiCurrencyBankText extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->exchanger = new ArrayExchanger();
-        $this->bank = new MultiCurrencyBank('Dough\\Money\\MultiCurrencyMoney', array('USD', 'CHF'), 'USD', $this->exchanger);
+        $this->bank = new MultiCurrencyBank(array('USD', 'CHF'), 'USD', $this->exchanger);
     }
 
     /**
@@ -36,7 +36,7 @@ class MultiCurrencyBankText extends PHPUnit_Framework_TestCase
      */
     public function testInvalidBaseCurrency()
     {
-        new MultiCurrencyBank('Dough\\Money\\MultiCurrencyMoney', array(), 'USD', $this->exchanger);
+        new MultiCurrencyBank(array(), 'USD', $this->exchanger);
     }
 
     /**

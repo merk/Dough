@@ -17,7 +17,7 @@ class MoneyText extends PHPUnit_Framework_TestCase
 {
     protected function getBank()
     {
-        $bank = new Bank('Dough\\Money\\Money');
+        $bank = new Bank();
 
         return $bank;
     }

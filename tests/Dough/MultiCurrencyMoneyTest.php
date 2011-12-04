@@ -26,7 +26,7 @@ class MultiCurrencyMoneyText extends PHPUnit_Framework_TestCase
     {
         $exchanger = new ArrayExchanger();
         $exchanger->addRate('CHF', 'USD', 0.5);
-        $this->bank = new MultiCurrencyBank('Dough\\Money\\MultiCurrencyMoney', array('USD', 'CHF'), 'USD', $exchanger);
+        $this->bank = new MultiCurrencyBank(array('USD', 'CHF'), 'USD', $exchanger);
     }
 
     public function testEquality()

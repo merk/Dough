@@ -30,7 +30,7 @@ class Bank implements BankInterface
      *
      * @param string $moneyClass FQCN of the Money class to use.
      */
-    public function __construct($moneyClass)
+    public function __construct($moneyClass = 'Dough\\Money\\Money')
     {
         $this->moneyClass = $moneyClass;
     }
