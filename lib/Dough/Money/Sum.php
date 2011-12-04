@@ -18,7 +18,7 @@ use Dough\Bank\BankInterface;
  *
  * @author Tim Nagel <tim@nagel.com.au>
  */
-class Sum implements MoneyInterface
+class Sum extends BaseMoney
 {
     private $augend;
     private $addend;
@@ -82,17 +82,6 @@ class Sum implements MoneyInterface
     }
 
     /**
-     * Subtracts the subtrahend from the money object.
-     *
-     * @param MoneyInterface $subtrahend
-     * @return Sum
-     */
-    public function subtract(MoneyInterface $subtrahend)
-    {
-        return $this->plus($subtrahend->times(-1));
-    }
-
-    /**
      * Multiplies all items of this sum by the multiplier.
      *
      * @param int|float $multiplier
@@ -101,16 +90,5 @@ class Sum implements MoneyInterface
     public function times($multiplier)
     {
         return new Sum($this->augend->times($multiplier), $this->addend->times($multiplier));
-    }
-
-    /**
-     * Divides the money object by the divisor.
-     *
-     * @param int|float $divisor
-     * @return MoneyInterface
-     */
-    public function divide($divisor)
-    {
-        return $this->times(1 / $divisor);
     }
 }

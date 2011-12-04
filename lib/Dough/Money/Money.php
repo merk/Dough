@@ -19,7 +19,7 @@ use Dough\Bank\BankInterface;
  *
  * @author Tim Nagel <tim@nagel.com.au>
  */
-class Money implements MoneyInterface
+class Money extends BaseMoney
 {
     private $amount;
     private $currency;
@@ -82,17 +82,6 @@ class Money implements MoneyInterface
     }
 
     /**
-     * Divides the money object by the divisor.
-     *
-     * @param int|float $divisor
-     * @return MoneyInterface
-     */
-    public function divide($divisor)
-    {
-        return $this->times(1 / $divisor);
-    }
-
-    /**
      * Adds the supplied monetary object to this object
      * and returns them as a new Sum.
      *
@@ -102,19 +91,6 @@ class Money implements MoneyInterface
     public function plus(MoneyInterface $addend)
     {
         return new Sum($this, $addend);
-    }
-
-    /**
-     * Subtracts the subtrahend from the money object.
-     *
-     * The subtrahend should be passed in as a positive value.
-     *
-     * @param MoneyInterface $subtrahend
-     * @return Sum
-     */
-    public function subtract(MoneyInterface $subtrahend)
-    {
-        return $this->plus($subtrahend->times(-1));
     }
 
     /**
