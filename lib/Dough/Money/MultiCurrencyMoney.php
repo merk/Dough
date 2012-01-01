@@ -97,8 +97,12 @@ class MultiCurrencyMoney extends Money implements MultiCurrencyMoneyInterface
      * @throws \InvalidArgumentException when the supplied $bank does not
      *         support currency conversion.
      */
-    public function reduce(BankInterface $bank, $toCurrency = null)
+    public function reduce(BankInterface $bank = null, $toCurrency = null)
     {
+        if (null === $bank) {
+            $bank = static::getBank();
+        }
+
         if (!$bank instanceof MultiCurrencyBankInterface) {
             throw new \InvalidArgumentException('The supplied bank must implement MultiCurrencyBankInterface');
         }

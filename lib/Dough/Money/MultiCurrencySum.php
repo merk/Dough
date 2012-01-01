@@ -50,8 +50,12 @@ class MultiCurrencySum extends Sum implements MultiCurrencyMoneyInterface
      *
      * @return MultiCurrencyMoney
      */
-    public function reduce(BankInterface $bank, $toCurrency = null)
+    public function reduce(BankInterface $bank = null, $toCurrency = null)
     {
+        if (null === $bank) {
+            $bank = static::getBank();
+        }
+        
         $amount = $this->getAugend()->reduce($bank, $toCurrency)->getAmount() +
                   $this->getAddend()->reduce($bank, $toCurrency)->getAmount();
 
