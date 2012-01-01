@@ -21,7 +21,7 @@
         <whitelist>
             <directory>./lib/Dough/</directory>
             <exclude>
-                <file>./tests/bootstrap</file>
+                <file>./tests/bootstrap.php</file>
             </exclude>
         </whitelist>
     </filter>
