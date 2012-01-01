@@ -28,7 +28,7 @@ interface MoneyInterface
      *
      * @return Money
      */
-    public function reduce(BankInterface $bank);
+    public function reduce(BankInterface $bank = null);
 
     /**
      * Adds the addend to the money object.

@@ -11,6 +11,9 @@
 
 namespace Dough\Money;
 
+use Dough\Bank\Bank;
+use Dough\Bank\BankInterface;
+
 /**
  * An abstract money class that implements common
  * features used in all money objects.
@@ -19,6 +22,32 @@ namespace Dough\Money;
  */
 abstract class BaseMoney implements MoneyInterface
 {
+    protected static $bank;
+
+    /**
+     * Returns the static bank instance.
+     *
+     * @static
+     * @return BankInterface
+     */
+    protected static function getBank()
+    {
+        if (null === static::$bank) {
+            static::$bank = new Bank();
+        }
+
+        return static::$bank;
+    }
+
+    /**
+     * @static
+     * @param \Dough\Bank\BankInterface $bank
+     */
+    public static function setBank(BankInterface $bank)
+    {
+        static::$bank = $bank;
+    }
+
     /**
      * Adds an addend to this sum.
      *

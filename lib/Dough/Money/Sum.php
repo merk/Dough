@@ -62,8 +62,12 @@ class Sum extends BaseMoney
      *
      * @return Money
      */
-    public function reduce(BankInterface $bank)
+    public function reduce(BankInterface $bank = null)
     {
+        if (null === $bank) {
+            $bank = static::getBank();
+        }
+
         $amount = $this->augend->reduce($bank)->getAmount() +
                   $this->addend->reduce($bank)->getAmount();
 

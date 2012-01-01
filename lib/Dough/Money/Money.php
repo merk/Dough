@@ -74,7 +74,7 @@ class Money extends BaseMoney
      *
      * @return Money
      */
-    public function reduce(BankInterface $bank)
+    public function reduce(BankInterface $bank = null)
     {
         return clone $this;
     }

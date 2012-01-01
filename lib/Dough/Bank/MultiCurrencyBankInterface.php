@@ -66,4 +66,6 @@ interface MultiCurrencyBankInterface extends BankInterface
      *         rate set.
      */
     // public function reduce(MoneyInterface $source);
+
+    // public function createMoney($amount, $currency = null);
 }

@@ -29,4 +29,10 @@ interface BankInterface
      * @return MoneyInterface
      */
     public function reduce(MoneyInterface $source);
+
+    /**
+     * Creates a new money instance.
+     *
+     */
+    public function createMoney($amount);
 }
