@@ -64,7 +64,7 @@ class Money extends BaseMoney
      */
     public function times($multiplier)
     {
-        return new self($this->amount * $multiplier);
+        return new self(number_format($this->amount * $multiplier, 2));
     }
 
     /**
