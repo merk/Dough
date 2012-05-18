@@ -14,20 +14,18 @@ class DoughExtension extends \Twig_Extension
         $this->bank = $bank;
     }
 
-    public function getFunctions()
+    public function getFilters()
     {
         return array(
-            'dough_currency' => new \Twig_Function_Method($this, 'renderCurrency'),
+            'dough_currency' => new \Twig_Filter_Method($this, 'getAmount', array('is_safe' => array('html'))),
         );
     }
 
-
-
-    public function renderCurrency(MoneyInterface $money)
+    public function getAmount(MoneyInterface $money, $currency = null)
     {
-        $reduced = $money->reduce($this->bank);
+        $reduced = $this->bank->reduce($money, $currency);
 
-        return number_format($reduced->getAmount(), 2);
+        return $reduced->getAmount();
     }
 
     public function getName()
