@@ -28,7 +28,7 @@ class Money extends BaseMoney
      */
     public function __construct($amount)
     {
-        $this->amount = $amount;
+        $this->amount = floatval($amount);
     }
 
     /**
