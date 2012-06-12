@@ -64,7 +64,8 @@ class Money extends BaseMoney
      */
     public function times($multiplier)
     {
-        return new self($this->amount * $multiplier);
+        $amount = $this->getBank()->getRounder()->round($this->amount * $multiplier);
+        return new self($amount);
     }
 
     /**

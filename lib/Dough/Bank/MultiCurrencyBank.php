@@ -16,6 +16,8 @@ use Dough\Exception\NoExchangeRateException;
 use Dough\Exchanger\ExchangerInterface;
 use Dough\Money\Money;
 use Dough\Money\MoneyInterface;
+use Dough\Rounder\BasicRounder;
+use Dough\Rounder\RounderInterface;
 
 /**
  * Handles the reduction of different monetary objects into a single
@@ -54,23 +56,36 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
     private $exchanger;
 
     /**
+     * The rounder to use for rounding.
+     *
+     * @var \Dough\Rounder\RounderInterface
+     */
+    private $rounder;
+
+    /**
      * Constructor.
      *
      * @param string $moneyClass
      * @param array $currencies An array of currencies this bank knows about.
      * @param string $baseCurrency The base currency to be used by the bank.
      * @param \Dough\Exchanger\ExchangerInterface $exchanger
+     * @param \Dough\Rounder\RounderInterface $rounder
      *
      * @throws \Dough\Exception\InvalidCurrencyException when the base currency
      *         is unknown.
      */
-    public function __construct(array $currencies, $baseCurrency, ExchangerInterface $exchanger, $moneyClass = 'Dough\\Money\\MultiCurrencyMoney')
+    public function __construct(array $currencies, $baseCurrency, ExchangerInterface $exchanger, $moneyClass = 'Dough\\Money\\MultiCurrencyMoney', RounderInterface $rounder = null)
     {
         $this->currencies = $currencies;
         $this->exchanger = $exchanger;
         $this->moneyClass = $moneyClass;
 
         $this->setBaseCurrency($baseCurrency);
+
+        if (null === $rounder) {
+            $rounder = new BasicRounder(2, PHP_ROUND_HALF_UP);
+        }
+        $this->rounder = $rounder;
     }
 
     /**
@@ -192,5 +207,15 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
 
         $class = $this->moneyClass;
         return new $class($amount, $currency);
+    }
+
+    /**
+     * Returns the rounder to be used for rounding operations.
+     *
+     * @return \Dough\Rounder\RounderInterface
+     */
+    public function getRounder()
+    {
+        return $this->rounder;
     }
 }
