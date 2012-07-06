@@ -15,6 +15,8 @@ use Dough\Exception\InvalidCurrencyException;
 use Dough\Exception\NoExchangeRateException;
 use Dough\Money\Money;
 use Dough\Money\MoneyInterface;
+use Dough\Rounder\BasicRounder;
+use Dough\Rounder\RounderInterface;
 
 /**
  * Handles the reduction of different monetary objects.
@@ -23,16 +25,33 @@ use Dough\Money\MoneyInterface;
  */
 class Bank implements BankInterface
 {
+    /**
+     * Class of the Money object to create.
+     *
+     * @var string
+     */
     protected $moneyClass;
+
+    /**
+     * The rounder to be used when rounding values.
+     *
+     * @var RounderInterface
+     */
+    protected $rounder;
 
     /**
      * Constructor.
      *
      * @param string $moneyClass FQCN of the Money class to use.
      */
-    public function __construct($moneyClass = 'Dough\\Money\\Money')
+    public function __construct($moneyClass = 'Dough\\Money\\Money', RounderInterface $rounder = null)
     {
         $this->moneyClass = $moneyClass;
+
+        if (null === $rounder) {
+            $rounder = new BasicRounder(2, PHP_ROUND_HALF_UP);
+        }
+        $this->rounder = $rounder;
     }
 
     /**
@@ -60,5 +79,15 @@ class Bank implements BankInterface
     {
         $class = $this->moneyClass;
         return new $class($amount);
+    }
+
+    /**
+     * Returns the rounder to use for rounding operations.
+     *
+     * @return \Dough\Rounder\RounderInterface
+     */
+    public function getRounder()
+    {
+        return $this->rounder;
     }
 }

@@ -25,7 +25,6 @@ interface BankInterface
      * object.
      *
      * @param \Dough\Money\MoneyInterface $source
-     *
      * @return MoneyInterface
      */
     public function reduce(MoneyInterface $source);
@@ -33,6 +32,15 @@ interface BankInterface
     /**
      * Creates a new money instance.
      *
+     * @param float $amount
+     * @return MoneyInterface
      */
     public function createMoney($amount);
+
+    /**
+     * Returns the rounder to be used for rounding operations.
+     *
+     * @return \Dough\Rounder\RounderInterface
+     */
+    public function getRounder();
 }

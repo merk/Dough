@@ -52,7 +52,7 @@ class MoneyText extends PHPUnit_Framework_TestCase
     {
         $ten = new Money(10);
 
-        $this->assertEquals(new Money(3.3333333333333), $ten->divide(3));
+        $this->assertEquals(new Money(3.33), $ten->divide(3));
     }
 
     /**
@@ -133,11 +133,23 @@ class MoneyText extends PHPUnit_Framework_TestCase
     {
         $bank = $this->getBank();
 
-        $five = new Money(5, 'USD');
+        $five = new Money(5);
 
         $sum = $five->plus($five)->times(2);
-        $result = $bank->reduce($sum, 'USD');
+        $result = $bank->reduce($sum);
 
-        $this->assertTrue($result->equals(new Money(20, 'USD')));
+        $this->assertTrue($result->equals(new Money(20)));
+    }
+
+    public function testRounding()
+    {
+        $bank = $this->getBank();
+
+        $item = new Money(9.95);
+        $discountedItem = $bank->reduce($item->times(0.90));
+        $items = $bank->reduce($discountedItem->times(20)->reduce());
+
+        $this->assertTrue($discountedItem->equals(new Money(8.96)));
+        $this->assertTrue($items->equals(new Money(179.2)));
     }
 }
