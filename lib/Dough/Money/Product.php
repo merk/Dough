@@ -67,9 +67,11 @@ class Product extends BaseMoney
             $bank = static::getBank();
         }
 
+        $rounder = $bank->getRounder();
         $amount = bcmul($this->multiplicand->reduce($bank)->getAmount(),
                         $this->multiplier,
-                        static::$precision);
+                        $rounder->getPrecision() + 1);
+        $amount = $rounder->round($amount);
 
         return new Money($amount);
     }

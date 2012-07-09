@@ -68,8 +68,11 @@ class Sum extends BaseMoney
             $bank = static::getBank();
         }
 
-        $amount = $this->augend->reduce($bank)->getAmount() +
-                  $this->addend->reduce($bank)->getAmount();
+        $rounder = $bank->getRounder();
+        $amount = bcadd($this->augend->reduce($bank)->getAmount(),
+                        $this->addend->reduce($bank)->getAmount(),
+                        $rounder->getPrecision() + 1);
+        $amount = $rounder->round($amount);
 
         return new Money($amount);
     }
