@@ -25,13 +25,6 @@ abstract class BaseMoney implements MoneyInterface
     protected static $bank;
 
     /**
-     * The precision of the rounding operations.
-     *
-     * @var int
-     */
-    public static $precision = 2;
-
-    /**
      * Returns the static bank instance.
      *
      * @static
