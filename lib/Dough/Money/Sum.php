@@ -73,15 +73,4 @@ class Sum extends BaseMoney
 
         return new Money($amount);
     }
-
-    /**
-     * Multiplies all items of this sum by the multiplier.
-     *
-     * @param int|float $multiplier
-     * @return Sum
-     */
-    public function times($multiplier)
-    {
-        return new self($this->augend->times($multiplier), $this->addend->times($multiplier));
-    }
 }
