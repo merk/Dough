@@ -25,21 +25,6 @@ abstract class BaseMoney implements MoneyInterface
     protected static $bank;
 
     /**
-     * The precision of the rounding operations.
-     *
-     * @var int
-     */
-    public static $precision = 2;
-
-    /**
-     * The rounding mode used. PHP constants used by
-     * round().
-     *
-     * @var int
-     */
-    public static $roundingMode = PHP_ROUND_HALF_UP;
-
-    /**
      * Returns the static bank instance.
      *
      * @static
@@ -85,6 +70,18 @@ abstract class BaseMoney implements MoneyInterface
     public function subtract(MoneyInterface $subtrahend)
     {
         return $this->plus($subtrahend->times(-1));
+    }
+
+    /**
+     * Multiplies this object by the multiplier and returns
+     * a new object of that value.
+     *
+     * @param int|float $multiplier
+     * @return Money
+     */
+    public function times($multiplier)
+    {
+        return new Product($this, $multiplier);
     }
 
     /**

@@ -22,4 +22,14 @@ interface RounderInterface
      * @return float
      */
     function round($value, $currency = null);
+
+    /**
+     * Returns the precision of the rounder. The underlying
+     * classes that use the rounder will use this precision
+     * with bc math function to make sure that the operation
+     * has enough precision.
+     *
+     * @return integer
+     */
+    function getPrecision();
 }

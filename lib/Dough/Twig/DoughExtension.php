@@ -49,8 +49,12 @@ class DoughExtension extends \Twig_Extension
      * @param MoneyInterface $money    A MoneyInterface instance
      * @param string         $currency The currency code
      */
-    public function getAmount(MoneyInterface $money, $currency = null)
+    public function getAmount(MoneyInterface $money = null, $currency = null)
     {
+        if (null === $money) {
+            return 0.0;
+        }
+
         $reduced = $this->bank->reduce($money, $currency);
 
         return $reduced->getAmount();
