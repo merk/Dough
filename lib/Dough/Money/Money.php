@@ -55,20 +55,6 @@ class Money extends BaseMoney
     }
 
     /**
-     * Multiplies this object by the multiplier and returns
-     * a new object of that value.
-     *
-     * @param int|float $multiplier
-     *
-     * @return Money
-     */
-    public function times($multiplier)
-    {
-        $amount = $this->getBank()->getRounder()->round($this->amount * $multiplier);
-        return new self($amount);
-    }
-
-    /**
      * Reduces the value of this object to a single object.
      *
      * @param \Dough\Bank\BankInterface $bank

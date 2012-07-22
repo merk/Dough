@@ -11,6 +11,7 @@
 
 use Dough\Bank\Bank;
 use Dough\Money\Money;
+use Dough\Money\MoneyInterface;
 use Dough\Money\Sum;
 
 class MoneyText extends PHPUnit_Framework_TestCase
@@ -27,32 +28,32 @@ class MoneyText extends PHPUnit_Framework_TestCase
         $five = new Money(5);
         $six = new Money(6);
 
-        $this->assertTrue($five->equals($five));
-        $this->assertFalse($six->equals($five));
+        $this->compareMoney($five, $five);
+        $this->compareNotMoney($five, $six);
     }
 
     public function testDollarMultiplication()
     {
         $five = new Money(5);
 
-        $this->assertEquals(new Money(10), $five->times(2));
-        $this->assertEquals(new Money(15), $five->times(3));
-        $this->assertEquals(new Money(1), $five->times(0.2));
+        $this->compareMoney(new Money(10), $five->times(2));
+        $this->compareMoney(new Money(15), $five->times(3));
+        $this->compareMoney(new Money(1), $five->times(0.2));
     }
 
     public function testDivide()
     {
         $ten = new Money(10);
 
-        $this->assertEquals(new Money(5), $ten->divide(2));
-        $this->assertEquals(new Money(20), $ten->divide(.5));
+        $this->compareMoney(new Money(5), $ten->divide(2));
+        $this->compareMoney(new Money(20), $ten->divide(.5));
     }
 
     public function testOddDivision()
     {
         $ten = new Money(10);
 
-        $this->assertEquals(new Money(3.33), $ten->divide(3));
+        $this->compareMoney(new Money(3.33), $ten->divide(3));
     }
 
     /**
@@ -65,8 +66,8 @@ class MoneyText extends PHPUnit_Framework_TestCase
         $sum = $five->plus($six);
 
         $this->assertInstanceOf('Dough\Money\Sum', $sum);
-        $this->assertEquals($five, $sum->getAugend());
-        $this->assertEquals($six, $sum->getAddend());
+        $this->compareMoney($five, $sum->getAugend());
+        $this->compareMoney($six, $sum->getAddend());
 
         return $sum;
     }
@@ -80,7 +81,7 @@ class MoneyText extends PHPUnit_Framework_TestCase
         $bank = $this->getBank();
         $reduced = $bank->reduce($sum);
 
-        $this->assertEquals(new Money(11), $reduced);
+        $this->compareMoney(new Money(11), $reduced);
     }
 
     public function testSubtraction()
@@ -90,8 +91,8 @@ class MoneyText extends PHPUnit_Framework_TestCase
         $subtraction = $six->subtract($five);
 
         $this->assertInstanceOf('Dough\Money\Sum', $subtraction);
-        $this->assertEquals($six, $subtraction->getAugend());
-        $this->assertEquals($five->times(-1), $subtraction->getAddend());
+        $this->compareMoney($six, $subtraction->getAugend());
+        $this->compareMoney($five->times(-1), $subtraction->getAddend());
 
         return $subtraction;
     }
@@ -105,7 +106,7 @@ class MoneyText extends PHPUnit_Framework_TestCase
         $bank = $this->getBank();
         $reduced = $bank->reduce($subtraction);
 
-        $this->assertEquals(new Money(1), $reduced);
+        $this->compareMoney(new Money(1), $reduced);
     }
 
     public function testReduceMoney()
@@ -114,7 +115,7 @@ class MoneyText extends PHPUnit_Framework_TestCase
         $five = new Money(5);
         $result = $bank->reduce($five);
 
-        $this->assertTrue($five->equals($result));
+        $this->compareMoney($five, $result);
     }
 
     public function testSumPlusMoney()
@@ -126,7 +127,7 @@ class MoneyText extends PHPUnit_Framework_TestCase
         $sum = $five->plus($five)->plus($five);
         $result = $bank->reduce($sum);
 
-        $this->assertTrue($result->equals(new Money(15)));
+        $this->compareMoney(new Money(15), $result);
     }
 
     public function testSumMultiply()
@@ -138,7 +139,7 @@ class MoneyText extends PHPUnit_Framework_TestCase
         $sum = $five->plus($five)->times(2);
         $result = $bank->reduce($sum);
 
-        $this->assertTrue($result->equals(new Money(20)));
+        $this->compareMoney(new Money(20), $result);
     }
 
     public function testRounding()
@@ -149,7 +150,23 @@ class MoneyText extends PHPUnit_Framework_TestCase
         $discountedItem = $bank->reduce($item->times(0.90));
         $items = $bank->reduce($discountedItem->times(20)->reduce());
 
-        $this->assertTrue($discountedItem->equals(new Money(8.96)));
-        $this->assertTrue($items->equals(new Money(179.2)));
+        $this->compareMoney(new Money(8.96), $discountedItem);
+        $this->compareMoney(new Money(179.2), $items);
+    }
+
+    protected function compareMoney(MoneyInterface $expected, MoneyInterface $actual)
+    {
+        $expected = $expected->reduce($this->getBank());
+        $actual = $actual->reduce($this->getBank());
+
+        $this->assertEquals($expected->getAmount(), $actual->getAmount(), 'That both money instances contain the same amount');
+    }
+
+    protected function compareNotMoney(MoneyInterface $expected, MoneyInterface $actual)
+    {
+        $expected = $expected->reduce($this->getBank());
+        $actual = $actual->reduce($this->getBank());
+
+        $this->assertNotEquals($expected->getAmount(), $actual->getAmount(), 'That both money instances do not contain the same amount');
     }
 }

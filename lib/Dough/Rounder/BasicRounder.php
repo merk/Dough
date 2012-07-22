@@ -18,7 +18,7 @@ class BasicRounder implements RounderInterface
 
     public function __construct($precision, $mode)
     {
-        $this->precision = floatval($precision);
+        $this->precision = intval($precision);
         $this->mode = $mode;
     }
 
@@ -32,5 +32,13 @@ class BasicRounder implements RounderInterface
     public function round($value, $currency = null)
     {
         return round($value, $this->precision, $this->mode);
+    }
+
+    /**
+     * @return int
+     */
+    public function getPrecision()
+    {
+        return $this->precision;
     }
 }

@@ -68,20 +68,12 @@ class Sum extends BaseMoney
             $bank = static::getBank();
         }
 
-        $amount = $this->augend->reduce($bank)->getAmount() +
-                  $this->addend->reduce($bank)->getAmount();
+        $rounder = $bank->getRounder();
+        $amount = bcadd($this->augend->reduce($bank)->getAmount(),
+                        $this->addend->reduce($bank)->getAmount(),
+                        $rounder->getPrecision() + 1);
+        $amount = $rounder->round($amount);
 
         return new Money($amount);
-    }
-
-    /**
-     * Multiplies all items of this sum by the multiplier.
-     *
-     * @param int|float $multiplier
-     * @return Sum
-     */
-    public function times($multiplier)
-    {
-        return new self($this->augend->times($multiplier), $this->addend->times($multiplier));
     }
 }
