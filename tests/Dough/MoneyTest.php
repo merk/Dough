@@ -167,6 +167,6 @@ class MoneyText extends PHPUnit_Framework_TestCase
         $expected = $expected->reduce($this->getBank());
         $actual = $actual->reduce($this->getBank());
 
-        $this->assertNotEquals($expected->getAmount(), $actual->getAmount(), 'That both money instances contain the same amount');
+        $this->assertNotEquals($expected->getAmount(), $actual->getAmount(), 'That both money instances do not contain the same amount');
     }
 }
