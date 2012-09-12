@@ -83,7 +83,7 @@ class MultiCurrencyMoney extends Money implements MultiCurrencyMoneyInterface
      */
     public function times($multiplier)
     {
-        return new self($this->getAmount() * $multiplier, $this->currency);
+        return new MultiCurrencyProduct($this, $multiplier);
     }
 
     /**

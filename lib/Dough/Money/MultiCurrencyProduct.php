@@ -14,27 +14,17 @@ namespace Dough\Money;
 use Dough\Bank\BankInterface;
 
 /**
- * Represents a multi currency sum of multiple monetary objects.
+ * Represents a multi currency product of a monetary object.
  *
- * @author Tim Nagel <tim@nagel.com.au>
+ * @author Denis Vasilev <yethee@biplane.ru>
  */
-class MultiCurrencySum extends Sum implements MultiCurrencyMoneyInterface
+class MultiCurrencyProduct extends Product implements MultiCurrencyMoneyInterface
 {
-    /**
-     * Multiplies all items of this sum by the multiplier.
-     *
-     * @param int|float $multiplier
-     * @return Sum
-     */
-    public function times($multiplier)
-    {
-        return new self($this->getAugend()->times($multiplier), $this->getAddend()->times($multiplier));
-    }
-
     /**
      * Adds an addend to this sum.
      *
      * @param MoneyInterface $addend
+     *
      * @return MultiCurrencySum
      */
     public function plus(MoneyInterface $addend)
@@ -43,10 +33,10 @@ class MultiCurrencySum extends Sum implements MultiCurrencyMoneyInterface
     }
 
     /**
-     * Reduces the sum to a single unit of currency.
+     * Reduces the product to a single unit of currency.
      *
-     * @param \Dough\Bank\BankInterface $bank
-     * @param string|null $toCurrency
+     * @param BankInterface $bank       The bank
+     * @param string|null   $toCurrency The currency code
      *
      * @return MultiCurrencyMoney
      */
@@ -57,9 +47,9 @@ class MultiCurrencySum extends Sum implements MultiCurrencyMoneyInterface
         }
 
         $rounder = $bank->getRounder();
-        $amount = bcadd(
-            $this->getAugend()->reduce($bank, $toCurrency)->getAmount(),
-            $this->getAddend()->reduce($bank, $toCurrency)->getAmount(),
+        $amount = bcmul(
+            $this->getMultiplicand()->reduce($bank, $toCurrency)->getAmount(),
+            $this->getMultiplier(),
             $rounder->getPrecision() + 1
         );
 
