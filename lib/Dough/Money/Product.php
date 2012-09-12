@@ -48,7 +48,7 @@ class Product extends BaseMoney
     /**
      * Returns to the multiplier.
      *
-     * @return MoneyInterface
+     * @return float|int
      */
     public function getMultiplier()
     {
@@ -84,6 +84,6 @@ class Product extends BaseMoney
      */
     public function times($multiplier)
     {
-        return new self($this->multiplicand, $this->multiplier);
+        return new static($this->multiplicand, $this->multiplier);
     }
 }

@@ -12,6 +12,7 @@
 use Dough\Bank\MultiCurrencyBank;
 use Dough\Exchanger\ArrayExchanger;
 use Dough\Money\Money;
+use Dough\Money\MultiCurrencyMoneyInterface;
 use Dough\Money\MultiCurrencyMoney;
 use Dough\Money\MultiCurrencySum;
 
@@ -52,26 +53,23 @@ class MultiCurrencyMoneyText extends PHPUnit_Framework_TestCase
     {
         $five = $this->bank->createMoney(5, 'USD');
 
-        $this->assertEquals($this->bank->createMoney(10, 'USD'), $five->times(2));
-        $this->assertEquals($this->bank->createMoney(15, 'USD'), $five->times(3));
+        $this->assertEquals($this->bank->createMoney(10, 'USD'), $five->times(2)->reduce($this->bank, 'USD'));
+        $this->assertEquals($this->bank->createMoney(15, 'USD'), $five->times(3)->reduce($this->bank, 'USD'));
     }
 
     public function testDivide()
     {
         $ten = $this->bank->createMoney(10, 'USD');
 
-        $this->assertEquals($this->bank->createMoney(5, 'USD'), $ten->divide(2));
-        $this->assertEquals($this->bank->createMoney(20, 'USD'), $ten->divide(.5));
+        $this->assertEquals($this->bank->createMoney(5, 'USD'), $ten->divide(2)->reduce($this->bank, 'USD'));
+        $this->assertEquals($this->bank->createMoney(20, 'USD'), $ten->divide(.5)->reduce($this->bank, 'USD'));
     }
 
-    /**
-     * TODO: rounding
-     */
     public function testOddDivision()
     {
         $ten = $this->bank->createMoney(10, 'USD');
 
-        $this->assertEquals($this->bank->createMoney(3.3333333333333, 'USD'), $ten->divide(3));
+        $this->assertEquals($this->bank->createMoney(3.33, 'USD'), $ten->divide(3)->reduce($this->bank, 'USD'));
     }
 
     public function testCurrency()
