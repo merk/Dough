@@ -109,6 +109,9 @@ class MultiCurrencyMoney extends Money implements MultiCurrencyMoneyInterface
 
         $rate = $bank->getRate($this->currency, $toCurrency);
 
-        return new MultiCurrencyMoney((float) $this->getAmount() * $rate, $toCurrency);
+        $rounder = $bank->getRounder();
+        $amount = bcmul($this->getAmount(), $rate, $rounder->getPrecision() + 1);
+
+        return new MultiCurrencyMoney($rounder->round($amount, $toCurrency), $toCurrency);
     }
 }
