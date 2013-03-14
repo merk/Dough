@@ -25,6 +25,13 @@ abstract class BaseMoney implements MoneyInterface
     protected static $bank;
 
     /**
+     * Format used by __toString
+     *
+     * @var string
+     */
+    public static $format = '$ %01.2f';
+
+    /**
      * Returns the static bank instance.
      *
      * @static
@@ -93,5 +100,13 @@ abstract class BaseMoney implements MoneyInterface
     public function divide($divisor)
     {
         return $this->times(1 / $divisor);
+    }
+
+    /**
+     * Lets you echo a money
+     */
+    public function __toString()
+    {
+        return sprintf(static::$format, $this->reduce()->getAmount());
     }
 }
