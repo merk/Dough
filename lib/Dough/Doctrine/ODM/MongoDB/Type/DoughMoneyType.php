@@ -23,6 +23,6 @@ class DoughMoneyType extends Type
 
     public function closureToPHP()
     {
-        return '$return = new Money($value);';
+        return '$return = new \Dough\Money\Money($value);';
     }
 }

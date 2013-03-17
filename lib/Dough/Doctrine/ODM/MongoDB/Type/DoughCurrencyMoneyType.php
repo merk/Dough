@@ -24,6 +24,6 @@ class DoughCurrencyMoneyType extends Type
 
     public function closureToPHP()
     {
-        return '$money = explode(\':\', $value);$return = new MultiCurrencyMoney($money[1], $money[0]);';
+        return '$money = explode(\':\', $value);$return = new \Dough\Money\MultiCurrencyMoney($money[1], $money[0]);';
     }
 }

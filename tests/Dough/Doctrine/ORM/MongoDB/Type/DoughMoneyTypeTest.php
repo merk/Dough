@@ -31,6 +31,6 @@ class DoughMoneyTypeTest extends PHPUnit_Framework_TestCase
     public function testClosureToPHP()
     {
         $type = new DoughMoneyType();
-        $this->assertSame('$return = new Money($value);', $type->closureToPHP());
+        $this->assertSame('$return = new \Dough\Money\Money($value);', $type->closureToPHP());
     }
 }
