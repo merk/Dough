@@ -84,6 +84,6 @@ class Product extends BaseMoney
      */
     public function times($multiplier)
     {
-        return new static($this->multiplicand, $this->multiplier);
+        return new static($this->multiplicand, $multiplier * $this->multiplier);
     }
 }
