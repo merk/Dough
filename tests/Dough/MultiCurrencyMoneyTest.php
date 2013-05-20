@@ -126,4 +126,22 @@ class MultiCurrencyMoneyText extends PHPUnit_Framework_TestCase
 
         $this->assertTrue($result->equals($this->bank->createMoney(20, 'USD')));
     }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testDefaultBankCantReduce()
+    {
+        $money = $this->bank->createMoney(10, 'CHF');
+
+        $money->reduce(null, 'USD');
+    }
+
+    public function testReduceToDefaultCurrency()
+    {
+        $francs = $this->bank->createMoney(10, 'CHF');
+        $dollars = $francs->reduce($this->bank);
+
+        $this->assertTrue($dollars->equals($this->bank->createMoney(5, 'USD')));
+    }
 }

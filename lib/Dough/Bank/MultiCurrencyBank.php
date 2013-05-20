@@ -145,7 +145,7 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
      * Returns the current exchange rate between 2 currencies.
      *
      * @param string $fromCurrency
-     * @param string $toCurrency
+     * @param string|null $toCurrency
      *
      * @return float
      *
@@ -155,8 +155,12 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
      *         or when the supplied currencies do not have an exchange
      *         rate set.
      */
-    public function getRate($fromCurrency, $toCurrency)
+    public function getRate($fromCurrency, $toCurrency = null)
     {
+        if (null === $toCurrency) {
+            $toCurrency = $this->getBaseCurrency();
+        }
+
         $this->checkCurrencies(array($fromCurrency, $toCurrency));
 
         return $this->exchanger->getRate($fromCurrency, $toCurrency);
@@ -167,7 +171,7 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
      * Money object of the supplied currency.
      *
      * @param \Dough\Money\MoneyInterface $source
-     * @param string $toCurrency
+     * @param string|null $toCurrency
      *
      * @return Money
      *
