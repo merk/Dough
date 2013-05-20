@@ -13,9 +13,17 @@ use Dough\Bank\Bank;
 use Dough\Money\Money;
 use Dough\Money\MoneyInterface;
 use Dough\Money\Sum;
+use Dough\Rounder\BasicRounder;
 
 class MoneyText extends PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        $reflProp = new \ReflectionProperty('Dough\\Money\\BaseMoney', 'bank');
+        $reflProp->setAccessible(true);
+        $reflProp->setValue(null, null);
+    }
+
     protected function getBank()
     {
         $bank = new Bank();
@@ -152,6 +160,50 @@ class MoneyText extends PHPUnit_Framework_TestCase
 
         $this->compareMoney(new Money(8.96), $discountedItem);
         $this->compareMoney(new Money(179.2), $items);
+    }
+
+    public function testToString()
+    {
+        $money = new Money(9.95);
+
+        $this->assertEquals('$ 9.95', (string) $money);
+    }
+
+    public function testAlternativeBank()
+    {
+        $rounder = new BasicRounder(2, PHP_ROUND_HALF_UP);
+
+        $bank = $this->getMock('Dough\\Bank\\Bank', array('getRounder'));
+        $bank->expects($this->once())
+             ->method('getRounder')
+             ->will($this->returnValue($rounder));
+
+        Money::setBank($bank);
+
+        $money = new Money(1);
+        $sum = $money->plus($money);
+
+        $this->compareMoney(new Money(2), $sum->reduce());
+    }
+
+    public function testMoneyDirectEquals()
+    {
+        $money1 = new Money(1);
+        $money2 = new Money(1);
+        $money3 = new Money(2);
+
+        $this->assertTrue($money1->equals($money2));
+        $this->assertFalse($money2->equals($money3));
+    }
+
+    public function testProductOfAProduct()
+    {
+        $money = new Money(10);
+
+        $product = $money->times(2)->times(5);
+
+        $this->assertEquals(10, $product->getMultiplier());
+        $this->assertTrue($product->reduce()->equals(new Money(100)));
     }
 
     protected function compareMoney(MoneyInterface $expected, MoneyInterface $actual)

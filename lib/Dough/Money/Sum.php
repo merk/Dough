@@ -74,6 +74,6 @@ class Sum extends BaseMoney
                         $rounder->getPrecision() + 1);
         $amount = $rounder->round($amount);
 
-        return new Money($amount);
+        return $bank->createMoney($amount);
     }
 }

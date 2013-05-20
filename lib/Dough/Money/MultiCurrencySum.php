@@ -12,6 +12,7 @@
 namespace Dough\Money;
 
 use Dough\Bank\BankInterface;
+use Dough\Bank\MultiCurrencyBankInterface;
 
 /**
  * Represents a multi currency sum of multiple monetary objects.
@@ -24,7 +25,7 @@ class MultiCurrencySum extends Sum implements MultiCurrencyMoneyInterface
      * Multiplies all items of this sum by the multiplier.
      *
      * @param int|float $multiplier
-     * @return Sum
+     * @return MultiCurrencyMoneyInterface
      */
     public function times($multiplier)
     {
@@ -35,7 +36,7 @@ class MultiCurrencySum extends Sum implements MultiCurrencyMoneyInterface
      * Adds an addend to this sum.
      *
      * @param MoneyInterface $addend
-     * @return MultiCurrencySum
+     * @return MultiCurrencyMoneyInterface
      */
     public function plus(MoneyInterface $addend)
     {
@@ -48,12 +49,19 @@ class MultiCurrencySum extends Sum implements MultiCurrencyMoneyInterface
      * @param \Dough\Bank\BankInterface $bank
      * @param string|null $toCurrency
      *
-     * @return MultiCurrencyMoney
+     * @return MultiCurrencyMoneyInterface
+     *
+     * @throws \InvalidArgumentException when the supplied $bank does not
+     *         support currency conversion.
      */
     public function reduce(BankInterface $bank = null, $toCurrency = null)
     {
         if (null === $bank) {
             $bank = static::getBank();
+        }
+
+        if (!$bank instanceof MultiCurrencyBankInterface) {
+            throw new \InvalidArgumentException('The supplied bank must implement MultiCurrencyBankInterface');
         }
 
         $rounder = $bank->getRounder();
@@ -65,6 +73,6 @@ class MultiCurrencySum extends Sum implements MultiCurrencyMoneyInterface
 
         $amount = $rounder->round($amount, $toCurrency);
 
-        return new MultiCurrencyMoney($amount, $toCurrency);
+        return $bank->createMoney($amount, $toCurrency);
     }
 }

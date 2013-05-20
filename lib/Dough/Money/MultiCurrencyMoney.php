@@ -79,7 +79,7 @@ class MultiCurrencyMoney extends Money implements MultiCurrencyMoneyInterface
      * a new object of that value.
      *
      * @param int|float $multiplier
-     * @return Money
+     * @return MultiCurrencyMoneyInterface
      */
     public function times($multiplier)
     {
@@ -92,7 +92,7 @@ class MultiCurrencyMoney extends Money implements MultiCurrencyMoneyInterface
      * @param \Dough\Bank\BankInterface $bank
      * @param string $toCurrency
      *
-     * @return Money
+     * @return MultiCurrencyMoneyInterface
      *
      * @throws \InvalidArgumentException when the supplied $bank does not
      *         support currency conversion.

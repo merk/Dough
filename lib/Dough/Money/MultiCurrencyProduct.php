@@ -12,6 +12,7 @@
 namespace Dough\Money;
 
 use Dough\Bank\BankInterface;
+use Dough\Bank\MultiCurrencyBankInterface;
 
 /**
  * Represents a multi currency product of a monetary object.
@@ -38,12 +39,16 @@ class MultiCurrencyProduct extends Product implements MultiCurrencyMoneyInterfac
      * @param BankInterface $bank       The bank
      * @param string|null   $toCurrency The currency code
      *
-     * @return MultiCurrencyMoney
+     * @return MultiCurrencyMoneyInterface
      */
     public function reduce(BankInterface $bank = null, $toCurrency = null)
     {
         if (null === $bank) {
             $bank = static::getBank();
+        }
+
+        if (!$bank instanceof MultiCurrencyBankInterface) {
+            throw new \InvalidArgumentException('The supplied bank must implement MultiCurrencyBankInterface');
         }
 
         $rounder = $bank->getRounder();
@@ -55,6 +60,6 @@ class MultiCurrencyProduct extends Product implements MultiCurrencyMoneyInterfac
 
         $amount = $rounder->round($amount, $toCurrency);
 
-        return new MultiCurrencyMoney($amount, $toCurrency);
+        return $bank->createMoney($amount, $toCurrency);
     }
 }
