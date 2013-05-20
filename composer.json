@@ -14,7 +14,8 @@
     },
     "require-dev": {
         "doctrine/mongodb-odm": "1.0.*@dev",
-        "twig/twig": "*"
+        "doctrine/mongodb": "1.0.*@dev",
+        "twig/twig": "~1.0"
     },
     "autoload": {
         "psr-0": { "Dough": "lib" }
