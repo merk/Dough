@@ -12,7 +12,6 @@
 namespace Dough\Bank;
 
 use Dough\Exception\InvalidCurrencyException;
-use Dough\Exception\NoExchangeRateException;
 use Dough\Exchanger\ExchangerInterface;
 use Dough\Money\Money;
 use Dough\Money\MoneyInterface;
@@ -74,8 +73,13 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
      * @throws \Dough\Exception\InvalidCurrencyException when the base currency
      *         is unknown.
      */
-    public function __construct(array $currencies, $baseCurrency, ExchangerInterface $exchanger, $moneyClass = 'Dough\\Money\\MultiCurrencyMoney', RounderInterface $rounder = null)
-    {
+    public function __construct(
+        array $currencies,
+        $baseCurrency,
+        ExchangerInterface $exchanger,
+        $moneyClass = 'Dough\\Money\\MultiCurrencyMoney',
+        RounderInterface $rounder = null
+    ) {
         $this->currencies = $currencies;
         $this->exchanger = $exchanger;
         $this->moneyClass = $moneyClass;

@@ -59,7 +59,11 @@ class ArrayExchanger implements ExchangerInterface
 
         $currencyString = "{$fromCurrency}-{$toCurrency}";
         if (!isset($this->rates[$currencyString])) {
-            throw new NoExchangeRateException(sprintf('Cannot convert %s to %s, no exchange rate found.', $fromCurrency, $toCurrency));
+            throw new NoExchangeRateException(sprintf(
+                'Cannot convert %s to %s, no exchange rate found.',
+                $fromCurrency,
+                $toCurrency
+            ));
         }
 
         return $this->rates[$currencyString];

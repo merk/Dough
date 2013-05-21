@@ -43,6 +43,7 @@ class Bank implements BankInterface
      * Constructor.
      *
      * @param string $moneyClass FQCN of the Money class to use.
+     * @param RounderInterface $rounder
      */
     public function __construct($moneyClass = 'Dough\\Money\\Money', RounderInterface $rounder = null)
     {
@@ -78,6 +79,7 @@ class Bank implements BankInterface
     public function createMoney($amount)
     {
         $class = $this->moneyClass;
+
         return new $class($amount);
     }
 

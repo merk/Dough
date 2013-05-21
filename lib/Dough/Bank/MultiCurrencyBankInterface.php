@@ -44,7 +44,7 @@ interface MultiCurrencyBankInterface extends BankInterface
      *
      * @return float
      *
-     * @throws InvalidArgumentException when a currency does not exist
+     * @throws \InvalidArgumentException when a currency does not exist
      *         or when the supplied currencies do not have an exchange
      *         rate set.
      */
@@ -56,16 +56,24 @@ interface MultiCurrencyBankInterface extends BankInterface
      * If no currency is supplied, it will convert to the default
      * currency.
      *
-     * @param \Dough\Money\MoneyInterface $source
+     * @param \Dough\Money\MultiCurrencyMoneyInterface $source
      * @param string|null $toCurrency
      *
-     * @return MoneyInterface
+     * @return \Dough\Money\MultiCurrencyMoneyInterface
      *
-     * @throws InvalidArgumentException when a currency does not exist
+     * @throws \InvalidArgumentException when a currency does not exist
      *         or when the supplied currencies do not have an exchange
      *         rate set.
      */
-    // public function reduce(MoneyInterface $source);
+    public function reduce(MoneyInterface $source/*, $toCurrency = null*/);
 
-    // public function createMoney($amount, $currency = null);
+    /**
+     * Creates a new money instance.
+     *
+     * @param float $amount
+     * @param string|null $currency
+     *
+     * @return \Dough\Money\MultiCurrencyMoneyInterface
+     */
+    public function createMoney($amount/*, $currency = null*/);
 }

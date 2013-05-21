@@ -21,7 +21,7 @@ interface RounderInterface
      * @param string|null $currency
      * @return float
      */
-    function round($value, $currency = null);
+    public function round($value, $currency = null);
 
     /**
      * Returns the precision of the rounder. The underlying
@@ -31,5 +31,5 @@ interface RounderInterface
      *
      * @return integer
      */
-    function getPrecision();
+    public function getPrecision();
 }

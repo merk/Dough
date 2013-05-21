@@ -34,7 +34,6 @@ abstract class BaseMoney implements MoneyInterface
     /**
      * Returns the static bank instance.
      *
-     * @static
      * @return BankInterface
      */
     protected static function getBank()
@@ -47,7 +46,9 @@ abstract class BaseMoney implements MoneyInterface
     }
 
     /**
-     * @static
+     * Sets the global bank object to be used when no bank is passed
+     * to reduce().
+     *
      * @param \Dough\Bank\BankInterface $bank
      */
     public static function setBank(BankInterface $bank)

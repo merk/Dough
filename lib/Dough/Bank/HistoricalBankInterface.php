@@ -31,7 +31,7 @@ interface HistoricalBankInterface extends MultiCurrencyBankInterface
      *
      * @return float
      *
-     * @throws InvalidArgumentException when a currency does not exist
+     * @throws \InvalidArgumentException when a currency does not exist
      *         or when the supplied currencies do not have an exchange
      *         rate set.
      */
@@ -44,9 +44,9 @@ interface HistoricalBankInterface extends MultiCurrencyBankInterface
      * @param string $toCurrency
      * @param \DateTime $at
      *
-     * @return MoneyInterface
+     * @return MultiCurrencyMoneyInterface
      *
-     * @throws InvalidArgumentException when a currency does not exist
+     * @throws \InvalidArgumentException when a currency does not exist
      *         or when the supplied currencies do not have an exchange
      *         rate set.
      */
