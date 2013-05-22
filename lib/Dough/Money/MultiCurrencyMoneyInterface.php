@@ -28,4 +28,11 @@ interface MultiCurrencyMoneyInterface extends MoneyInterface
      * @return Money
      */
     // public function reduce(BankInterface $bank, $toCurrency = null);
+
+    /**
+     * Returns the currency that this money object represents.
+     *
+     * @return string
+     */
+    public function getCurrency();
 }

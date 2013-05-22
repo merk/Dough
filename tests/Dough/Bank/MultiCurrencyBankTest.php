@@ -11,9 +11,8 @@
 
 use Dough\Bank\MultiCurrencyBank;
 use Dough\Exchanger\ArrayExchanger;
-use Dough\Money\Money;
 
-class MultiCurrencyBankText extends PHPUnit_Framework_TestCase
+class MultiCurrencyBankTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var \Dough\Bank\MultiCurrencyBank

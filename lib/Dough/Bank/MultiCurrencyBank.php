@@ -52,7 +52,7 @@ class MultiCurrencyBank implements MultiCurrencyBankInterface
      *
      * @var \Dough\Exchanger\ExchangerInterface
      */
-    private $exchanger;
+    protected $exchanger;
 
     /**
      * The rounder to use for rounding.

@@ -9,9 +9,7 @@
  * file that was distributed with this source code.
  */
 
-use Dough\Bank\MultiCurrencyBank;
 use Dough\Exchanger\ArrayExchanger;
-use Dough\Money\Money;
 
 class ArrayExchangerTest extends PHPUnit_Framework_TestCase
 {
@@ -28,5 +26,12 @@ class ArrayExchangerTest extends PHPUnit_Framework_TestCase
     public function testAddRate()
     {
         $this->exchanger->addRate('USD', 'CHF', 0.5);
+    }
+
+    public function testGetRate()
+    {
+        $this->exchanger->addRate('USD', 'CHF', 0.5);
+
+        $this->assertEquals(0.5, $this->exchanger->getRate('USD', 'CHF'));
     }
 }

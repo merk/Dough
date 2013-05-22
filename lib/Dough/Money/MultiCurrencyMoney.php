@@ -91,13 +91,14 @@ class MultiCurrencyMoney extends Money implements MultiCurrencyMoneyInterface
      *
      * @param \Dough\Bank\BankInterface $bank
      * @param string $toCurrency
+     * @param float $rate
      *
      * @return MultiCurrencyMoneyInterface
      *
      * @throws \InvalidArgumentException when the supplied $bank does not
      *         support currency conversion.
      */
-    public function reduce(BankInterface $bank = null, $toCurrency = null)
+    public function reduce(BankInterface $bank = null, $toCurrency = null, $rate = null)
     {
         if (null === $bank) {
             $bank = static::getBank();
@@ -107,7 +108,9 @@ class MultiCurrencyMoney extends Money implements MultiCurrencyMoneyInterface
             throw new \InvalidArgumentException('The supplied bank must implement MultiCurrencyBankInterface');
         }
 
-        $rate = $bank->getRate($this->currency, $toCurrency);
+        if (null === $rate) {
+            $rate = $bank->getRate($this->currency, $toCurrency);
+        }
 
         $rounder = $bank->getRounder();
         $amount = bcmul($this->getAmount(), $rate, $rounder->getPrecision() + 1);

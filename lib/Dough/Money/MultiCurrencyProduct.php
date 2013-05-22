@@ -38,10 +38,14 @@ class MultiCurrencyProduct extends Product implements MultiCurrencyMoneyInterfac
      *
      * @param BankInterface $bank       The bank
      * @param string|null   $toCurrency The currency code
+     * @param float $rate
      *
      * @return MultiCurrencyMoneyInterface
+     *
+     * @throws \InvalidArgumentException when the supplied $bank does not
+     *         support currency conversion.
      */
-    public function reduce(BankInterface $bank = null, $toCurrency = null)
+    public function reduce(BankInterface $bank = null, $toCurrency = null, $rate = null)
     {
         if (null === $bank) {
             $bank = static::getBank();
@@ -53,7 +57,7 @@ class MultiCurrencyProduct extends Product implements MultiCurrencyMoneyInterfac
 
         $rounder = $bank->getRounder();
         $amount = bcmul(
-            $this->getMultiplicand()->reduce($bank, $toCurrency)->getAmount(),
+            $this->getMultiplicand()->reduce($bank, $toCurrency, $rate)->getAmount(),
             $this->getMultiplier(),
             $rounder->getPrecision() + 1
         );

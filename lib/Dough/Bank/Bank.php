@@ -11,8 +11,6 @@
 
 namespace Dough\Bank;
 
-use Dough\Exception\InvalidCurrencyException;
-use Dough\Exception\NoExchangeRateException;
 use Dough\Money\Money;
 use Dough\Money\MoneyInterface;
 use Dough\Rounder\BasicRounder;

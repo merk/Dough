@@ -18,7 +18,7 @@ use Dough\Exception\NoExchangeRateException;
  *
  * @author Tim Nagel <tim@nagel.com.au>
  */
-class ArrayExchanger implements ExchangerInterface
+class ArrayExchanger extends BaseArrayExchanger implements ExchangerInterface
 {
     /**
      * Stores exchange rates in the format of {$fromCurrency}-{$toCurrency}
@@ -37,7 +37,7 @@ class ArrayExchanger implements ExchangerInterface
      */
     public function addRate($fromCurrency, $toCurrency, $rate)
     {
-        $this->rates["{$fromCurrency}-{$toCurrency}"] = $rate;
+        $this->rates[$this->getCurrencyKey($fromCurrency, $toCurrency)] = $rate;
     }
 
     /**
@@ -57,8 +57,8 @@ class ArrayExchanger implements ExchangerInterface
             return 1;
         }
 
-        $currencyString = "{$fromCurrency}-{$toCurrency}";
-        if (!isset($this->rates[$currencyString])) {
+        $currencyKey = $this->getCurrencyKey($fromCurrency, $toCurrency);
+        if (!isset($this->rates[$currencyKey])) {
             throw new NoExchangeRateException(sprintf(
                 'Cannot convert %s to %s, no exchange rate found.',
                 $fromCurrency,
@@ -66,6 +66,6 @@ class ArrayExchanger implements ExchangerInterface
             ));
         }
 
-        return $this->rates[$currencyString];
+        return $this->rates[$currencyKey];
     }
 }

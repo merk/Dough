@@ -55,4 +55,12 @@ class IntervalRounderTest extends PHPUnit_Framework_TestCase
             array(9999.99, 10000)
         );
     }
+
+    public function testGetters()
+    {
+        $rounder = new IntervalRounder(10, 2);
+
+        $this->assertEquals(10, $rounder->getInterval());
+        $this->assertEquals(2, $rounder->getPrecision());
+    }
 }

@@ -48,6 +48,8 @@ class DoughExtension extends \Twig_Extension
      *
      * @param MoneyInterface $money    A MoneyInterface instance
      * @param string         $currency The currency code
+     *
+     * @return float
      */
     public function getAmount(MoneyInterface $money = null, $currency = null)
     {
