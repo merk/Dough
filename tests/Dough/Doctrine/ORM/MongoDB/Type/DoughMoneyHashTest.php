@@ -1,6 +1,6 @@
 <?php
 
-use Doctrine\ODM\MongoDB\Mapping\Types\Type;
+use Doctrine\ODM\MongoDB\Types\Type;
 use Dough\Money\Money;
 use Dough\Doctrine\ODM\MongoDB\Type\DoughMoneyHashType;
 

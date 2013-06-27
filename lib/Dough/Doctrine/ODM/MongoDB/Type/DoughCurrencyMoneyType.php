@@ -11,7 +11,7 @@
 
 namespace Dough\Doctrine\ODM\MongoDB\Type;
 
-use Doctrine\ODM\MongoDB\Mapping\Types\Type;
+use Doctrine\ODM\MongoDB\Types\Type;
 use Dough\Money\MultiCurrencyMoney;
 
 class DoughCurrencyMoneyType extends Type
