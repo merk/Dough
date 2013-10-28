@@ -18,5 +18,4 @@ namespace Dough\Exception;
  */
 class NoExchangeRateException extends \InvalidArgumentException implements Exception
 {
-
 }
