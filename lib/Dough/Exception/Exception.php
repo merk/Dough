@@ -18,5 +18,4 @@ namespace Dough\Exception;
  */
 interface Exception
 {
-
 }
