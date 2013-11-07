@@ -9,12 +9,12 @@ class DoughMoneyHashTest extends PHPUnit_Framework_TestCase
     public function __construct()
     {
         Type::registerType('dough_money', 'Dough\Doctrine\ODM\MongoDB\Type\DoughMoneyType');
+        Type::registerType('dough_money_hash', 'Dough\Doctrine\ODM\MongoDB\Type\DoughMoneyHashType');
     }
 
     public function testConvertToDatabaseValue()
     {
-        $type = new DoughMoneyHashType();
-
+        $type = Type::getType('dough_money_hash');
         $startingValue = array(
             'value1' => null,
             'value2' =>new Money(1234.567, 'BTC')
@@ -29,7 +29,7 @@ class DoughMoneyHashTest extends PHPUnit_Framework_TestCase
 
     public function testConvertToPHPValue()
     {
-        $type = new DoughMoneyHashType();
+        $type = Type::getType('dough_money_hash');
         $startingValue = array(
             'value1' => null,
             'value2' => '1234.567'
@@ -44,14 +44,14 @@ class DoughMoneyHashTest extends PHPUnit_Framework_TestCase
 
     public function testClosureToMongo()
     {
-        $type = new DoughMoneyHashType();
+        $type = Type::getType('dough_money_hash');
         $expected = '$process = $value;foreach ($process as $key => $value) { if ($value) { $return = (string) $value->getAmount();$process[$key] = $return; } } $return = $process;';
         $this->assertSame($expected, $type->closureToMongo());
     }
 
     public function testClosureToPHP()
     {
-        $type = new DoughMoneyHashType();
+        $type = Type::getType('dough_money_hash');
         $expected = '$process = $value;foreach ($process as $key => $value) { if ($value) { $return = new \Dough\Money\Money($value);$process[$key] = $return; } } $return = $process;';
 
         $this->assertSame($expected, $type->closureToPHP());
