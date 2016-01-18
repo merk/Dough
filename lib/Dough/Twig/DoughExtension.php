@@ -39,7 +39,7 @@ class DoughExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'dough_currency' => new \Twig_Filter_Method($this, 'getAmount', array('is_safe' => array('html'))),
+            new \Twig_SimpleFilter('dough_currency', [$this, 'getAmount'], array('is_safe' => array('html'))),
         );
     }
 
